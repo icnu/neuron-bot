@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "src/sns-discord-bot-backend"
+    "src/registry-canister"
 ]
 resolver = "2"

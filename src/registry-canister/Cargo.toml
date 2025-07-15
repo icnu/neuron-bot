@@ -1,5 +1,5 @@
 [package]
-name = "sns-discord-bot-backend"
+name = "registry-canister"
 version = "0.1.0"
 edition = "2021"
 
