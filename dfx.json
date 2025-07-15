@@ -1,0 +1,37 @@
+{
+  "canisters": {
+    "internet_identity": {
+      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+      "frontend": {},
+      "remote": {
+        "id": {
+          "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+        }
+      },
+      "type": "custom",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+    },
+    "sns-discord-bot-backend": {
+      "candid": "src/sns-discord-bot-backend/sns-discord-bot-backend.did",
+      "package": "sns-discord-bot-backend",
+      "type": "rust"
+    },
+    "sns-discord-bot-frontend": {
+      "dependencies": [
+        "sns-discord-bot-backend"
+      ],
+      "source": [
+        "src/sns-discord-bot-frontend/assets"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
