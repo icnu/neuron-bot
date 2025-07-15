@@ -1,11 +1,13 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Copy, Shield, ExternalLink } from "lucide-react"
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Shield, ExternalLink } from "lucide-react";
+import Copy from "@/components/copy";
 
 export default function Component() {
-  // Mock data - replace with actual data from your backend
-  const isConnected = true
-  const walletAddress = "rdmx6-jaaaa-aaaah-qcaiq-cai"
+  const isConnected = true;
+  const walletAddress = "rdmx6-jaaaa-aaaah-qcaiq-cai";
   const userDAOs = [
     {
       id: 1,
@@ -36,7 +38,7 @@ export default function Component() {
         "8e1b4d7f0a3c6f9b2e5a8d1f4b7e0c3f",
       ],
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -61,7 +63,7 @@ export default function Component() {
                     </span>
                   </div>
                   <Button variant="ghost" size="icon">
-                    <Copy className="w-4 h-4" />
+                    <Copy text="hello" />
                   </Button>
                 </div>
               ) : (
