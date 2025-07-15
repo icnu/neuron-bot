@@ -2,8 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, ExternalLink } from "lucide-react";
+import { Shield, ExternalLink, RefreshCw, Plus } from "lucide-react";
 import Copy from "@/components/copy";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { useState } from "react";
 
 export default function Component() {
   const isConnected = true;
@@ -39,6 +48,17 @@ export default function Component() {
       ],
     },
   ];
+
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const refreshNeurons = async () => {
+    setIsRefreshing(true)
+    // Simulate API call
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 1500)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -76,12 +96,19 @@ export default function Component() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Your DAO Access</h2>
-          <p className="text-gray-600">
-            Manage your participation in decentralized autonomous organizations on the Internet Computer.
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Your DAO Access</h2>
+            <p className="text-gray-600">
+              Manage your participation in decentralized autonomous organizations on the Internet Computer.
+            </p>
+          </div>
+          <Button variant="outline" className="cursor-pointer" onClick={refreshNeurons} disabled={isRefreshing}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
         </div>
+
 
         {/* DAO List */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
@@ -117,7 +144,53 @@ export default function Component() {
             <Shield className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No SNS DAOs</h3>
             <p className="text-gray-600 mb-4">You don't have any SNS DAO neurons yet.</p>
-            <Button>Browse Available DAOs</Button>
+            <Button variant="outline" onClick={() => setIsModalOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add More Neurons
+            </Button>
+          </div>
+        )}
+
+        {/* Add Neurons Button */}
+        {userDAOs.length > 0 && (
+          <div className="mt-8 text-center">
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <Button className="cursor-pointer">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add More Neurons
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Add Neurons to DAO Access Bot</DialogTitle>
+                  <DialogDescription>
+                    To add a neuron, go to your NNS wallet and add the following address as a hot key for your neurons.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 block mb-2">Hot Key Address:</label>
+                    <div className="flex items-center space-x-2">
+                      <div className="flex-1 bg-gray-50 px-3 py-2 rounded border font-mono text-sm">
+                        "hello"
+                      </div>
+                      <Copy text="hello" />
+                    </div>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <p className="mb-2">Steps:</p>
+                    <ol className="list-decimal list-inside space-y-1">
+                      <li>Open your NNS wallet</li>
+                      <li>Select the neuron you want to add</li>
+                      <li>Go to neuron settings</li>
+                      <li>Add the address above as a hot key</li>
+                      <li>Click refresh to see your new neurons</li>
+                    </ol>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
       </main>
