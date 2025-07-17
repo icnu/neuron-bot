@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog"
 import { useEffect, useState } from "react";
 import { AuthClient } from "@dfinity/auth-client";
-import { registry_canister } from "../../declarations/registry-canister";
 
 export default function Component() {
   const isConnected = false;
@@ -73,6 +72,7 @@ export default function Component() {
   }, []);
 
   const updateActor = async () => {
+    console.log(await (await fetch('http://localhost:3000/ping')).json());
     const authClient = await AuthClient.create({
       keyType: "Ed25519"
     });
