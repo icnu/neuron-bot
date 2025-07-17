@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { useEffect, useState } from "react";
 import { AuthClient } from "@dfinity/auth-client";
+import { registry_canister } from "../../declarations/registry-canister";
 
 export default function Component() {
   const isConnected = false;
