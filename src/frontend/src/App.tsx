@@ -12,10 +12,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AuthClient } from "@dfinity/auth-client";
 
 export default function Component() {
-  const isConnected = true;
+  const isConnected = false;
   const walletAddress = "rdmx6-jaaaa-aaaah-qcaiq-cai";
   const userDAOs = [
     {
@@ -60,6 +61,44 @@ export default function Component() {
     }, 1500)
   }
 
+  const [state, setState] = useState<{ authClient: AuthClient | undefined, isAuthenticated: boolean }>({
+    authClient: undefined,
+    isAuthenticated: false,
+  });
+
+  // Initialize auth client
+  useEffect(() => {
+    updateActor();
+  }, []);
+
+  const updateActor = async () => {
+    const authClient = await AuthClient.create({
+      keyType: "Ed25519"
+    });
+    const identity = authClient.getIdentity();
+    console.log("Identity: ", identity);
+    const isAuthenticated = await authClient.isAuthenticated();
+
+    setState((prev) => ({
+      ...prev,
+      authClient,
+      isAuthenticated
+    }));
+  };
+
+  const login = async () => {
+    await state.authClient?.login({
+      identityProvider: "http://vg3po-ix777-77774-qaafa-cai.localhost:4943/",
+      onSuccess: updateActor
+    });
+  };
+
+  const logout = async () => {
+    await state.authClient?.logout();
+    updateActor();
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -87,7 +126,7 @@ export default function Component() {
                   </Button>
                 </div>
               ) : (
-                <Button>Connect Wallet</Button>
+                <Button onClick={login}>Connect Wallet</Button>
               )}
             </div>
           </div>
