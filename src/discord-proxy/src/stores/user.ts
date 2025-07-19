@@ -10,7 +10,7 @@ export type UserData = {
     principal: string
 };
 
-export class UserStore {
+export class UserStoreClass {
     async store(user_data: UserData) {
         await get_encrypted_maps().setValue(
             _mapOwner,
@@ -33,3 +33,5 @@ export class UserStore {
         });
     }
 }
+
+export const UserStore = new UserStoreClass();

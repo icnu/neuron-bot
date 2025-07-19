@@ -3,6 +3,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http'
 import fastifyCors from '@fastify/cors'
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
+import { UserRoutes } from './service';
 
 dotenv.config({ path: '../../.env' });
 
@@ -23,6 +24,7 @@ client.on(Events.InteractionCreate, async interaction => {
 const server: FastifyInstance = Fastify({})
 
 server.register(fastifyCors);
+server.register(UserRoutes);
 
 server.get('/ping', async (request, reply) => {
   return { pong: 'it worked!' }
