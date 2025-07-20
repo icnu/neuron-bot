@@ -3,7 +3,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http'
 import fastifyCors from '@fastify/cors'
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
-import { UserRoutes } from './service';
+import { UserRoutes } from './service/user';
 
 dotenv.config({ path: '../../.env' });
 

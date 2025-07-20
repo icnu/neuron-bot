@@ -1,0 +1,1 @@
+export { TokenServiceClass, TokenService } from './service';
