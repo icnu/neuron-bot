@@ -1,8 +1,8 @@
-import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify'
-import { Server, IncomingMessage, ServerResponse } from 'http'
+import Fastify, { FastifyInstance } from 'fastify'
 import fastifyCors from '@fastify/cors'
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events } from 'discord.js';
 import dotenv from 'dotenv';
+import { Token } from './token';
 
 dotenv.config({ path: '../../.env' });
 
@@ -11,14 +11,12 @@ async function initDiscord(): Promise<Client> {
 
   client.on(Events.ClientReady, readyClient => {
     console.log(`Logged in as ${readyClient.user.tag}!`);
+
+    Token.initDiscord(client);
   });
 
   client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName === 'ping') {
-      await interaction.reply('Pong!');
-    }
+    Token.interactionHandlerDiscord(client, interaction);
   });
 
   await client.login(process.env.DISCORD_BOT_TOKEN!);
