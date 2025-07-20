@@ -1,5 +1,17 @@
-import { Interaction } from "discord.js";
+import { Client, Interaction } from "discord.js";
 
-export const interactionRoutes = async (interaction: Interaction) {
-    
+async function initDiscord(client: Client) {
+    await client.application?.commands.create({
+        name: 'ping',
+        description: 'pongs you'
+    });
+}
+
+async function interactionHandlerDiscord(client: Client, interaction: Interaction) {
+    console.log(interaction);
+}
+
+export default {
+    initDiscord,
+    interactionHandlerDiscord
 }
