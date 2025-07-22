@@ -1,5 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, Interaction, MessageFlags, SlashCommandBuilder } from "discord.js";
 import { RegisterButton, RegisterSlashCommand } from "../commands";
+import { Route } from "../routes";
 
 async function neuronAuthenticateMessageHandler(interaction: ChatInputCommandInteraction) {
     const embed = new EmbedBuilder()
@@ -60,7 +61,19 @@ const buttons: RegisterButton[] = [
     }
 ];
 
+const routes: Route[] = [
+    {
+        path: '/ping',
+        method: 'GET',
+        options: {},
+        handler: (request, reply) => {
+            return { pong: 'it worked!' }
+        }
+    }
+]
+
 export default {
     commands,
-    buttons
+    buttons,
+    routes
 }

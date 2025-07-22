@@ -4,6 +4,7 @@ import { Client, Events } from 'discord.js';
 import dotenv from 'dotenv';
 import { handlerCommandInteraction, registerCommands } from './commands';
 import { SnsAggregatorService } from './snsaggregator';
+import { router } from './routes';
 
 dotenv.config({ path: '../../.env' });
 
@@ -27,10 +28,7 @@ async function initServer(): Promise<FastifyInstance> {
   const server: FastifyInstance = Fastify({})
 
   server.register(fastifyCors);
-
-  server.get('/ping', async (request, reply) => {
-    return { pong: 'it worked!' }
-  })
+  server.register(router);
 
   await server.listen({ port: 3000 });
   console.log("Listening on 3000");
