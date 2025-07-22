@@ -3,6 +3,7 @@ import fastifyCors from '@fastify/cors'
 import { Client, Events } from 'discord.js';
 import dotenv from 'dotenv';
 import { handlerCommandInteraction, registerCommands } from './commands';
+import { SnsAggregatorService } from './snsaggregator';
 
 dotenv.config({ path: '../../.env' });
 
@@ -38,6 +39,8 @@ async function initServer(): Promise<FastifyInstance> {
 
 async function start() {
   try {
+    await SnsAggregatorService.init();
+
     const client = await initDiscord();
     const server = await initServer();
   } catch (err) {
