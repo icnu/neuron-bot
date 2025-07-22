@@ -1,5 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, Interaction, MessageFlags, SlashCommandBuilder } from "discord.js";
 import { RegisterButton, RegisterSlashCommand } from "../commands";
+import { TokenService } from "./service";
 
 async function neuronAuthenticateMessageHandler(interaction: ChatInputCommandInteraction) {
     const embed = new EmbedBuilder()
@@ -23,6 +24,8 @@ async function neuronAuthenticateMessageHandler(interaction: ChatInputCommandInt
 }
 
 async function neuronTokenLoginHandler(interaction: ButtonInteraction) {
+    const token = await TokenService.get_token_for_user(interaction.user.id);
+
     const embed = new EmbedBuilder()
         .setTitle("Complete Login")
         .setColor('Aqua')
@@ -33,7 +36,7 @@ async function neuronTokenLoginHandler(interaction: ButtonInteraction) {
     const button = new ButtonBuilder()
         .setLabel('Login')
         .setStyle(ButtonStyle.Link)
-        .setURL('http://localhost:3000');
+        .setURL(`${process.env.FRONTEND_URL}/?token=${token}`);
     
     const row = new ActionRowBuilder().addComponents(button).toJSON();
     
