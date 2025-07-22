@@ -1,11 +1,12 @@
+import { Governance } from './governance';
 import { Token } from './token';
-import { ButtonInteraction, ChatInputCommandInteraction, Client, Interaction, SlashCommandBuilder } from "discord.js";
+import { ButtonInteraction, ChatInputCommandInteraction, Client, Interaction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js";
 
 export type CommandHandlerType = (interaction: ChatInputCommandInteraction) => Promise<void>;
 export type ButtonHandlerType = (interaction: ButtonInteraction) => Promise<void>;
 
 export type RegisterSlashCommand = {
-    command: SlashCommandBuilder,
+    command: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder,
     handler: CommandHandlerType,
 };
 
@@ -15,7 +16,8 @@ export type RegisterButton = {
 }
 
 let _commands: RegisterSlashCommand[] = [
-    ...Token.commands
+    ...Token.commands,
+    ...Governance.commands
 ];
 let _buttons: RegisterButton[] = [
     ...Token.buttons

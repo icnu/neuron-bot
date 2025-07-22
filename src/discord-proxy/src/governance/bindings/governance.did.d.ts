@@ -4,927 +4,740 @@ import type { IDL } from '@dfinity/candid';
 
 export interface Account {
   'owner' : [] | [Principal],
-  'subaccount' : [] | [Uint8Array | number[]],
+  'subaccount' : [] | [Subaccount],
 }
-export interface AccountIdentifier { 'hash' : Uint8Array | number[] }
-export type Action = { 'RegisterKnownNeuron' : KnownNeuron } |
-  { 'FulfillSubnetRentalRequest' : FulfillSubnetRentalRequest } |
-  { 'ManageNeuron' : ManageNeuron } |
-  { 'UpdateCanisterSettings' : UpdateCanisterSettings } |
-  { 'InstallCode' : InstallCode } |
-  { 'StopOrStartCanister' : StopOrStartCanister } |
-  { 'CreateServiceNervousSystem' : CreateServiceNervousSystem } |
-  { 'ExecuteNnsFunction' : ExecuteNnsFunction } |
-  { 'RewardNodeProvider' : RewardNodeProvider } |
-  { 'OpenSnsTokenSwap' : OpenSnsTokenSwap } |
-  { 'SetSnsTokenSwapOpenTimeWindow' : SetSnsTokenSwapOpenTimeWindow } |
-  { 'SetDefaultFollowees' : SetDefaultFollowees } |
-  { 'RewardNodeProviders' : RewardNodeProviders } |
-  { 'ManageNetworkEconomics' : NetworkEconomics } |
-  { 'ApproveGenesisKyc' : Principals } |
-  { 'AddOrRemoveNodeProvider' : AddOrRemoveNodeProvider } |
+export type Action = {
+    'ManageNervousSystemParameters' : NervousSystemParameters
+  } |
+  { 'AddGenericNervousSystemFunction' : NervousSystemFunction } |
+  { 'ManageDappCanisterSettings' : ManageDappCanisterSettings } |
+  { 'RemoveGenericNervousSystemFunction' : bigint } |
+  { 'SetTopicsForCustomProposals' : SetTopicsForCustomProposals } |
+  { 'RegisterExtension' : RegisterExtension } |
+  { 'UpgradeSnsToNextVersion' : {} } |
+  { 'RegisterDappCanisters' : RegisterDappCanisters } |
+  { 'TransferSnsTreasuryFunds' : TransferSnsTreasuryFunds } |
+  { 'UpgradeSnsControlledCanister' : UpgradeSnsControlledCanister } |
+  { 'DeregisterDappCanisters' : DeregisterDappCanisters } |
+  { 'MintSnsTokens' : MintSnsTokens } |
+  { 'AdvanceSnsTargetVersion' : AdvanceSnsTargetVersion } |
+  { 'Unspecified' : {} } |
+  { 'ManageSnsMetadata' : ManageSnsMetadata } |
+  {
+    'ExecuteGenericNervousSystemFunction' : ExecuteGenericNervousSystemFunction
+  } |
+  { 'ManageLedgerParameters' : ManageLedgerParameters } |
   { 'Motion' : Motion };
-export interface AddHotKey { 'new_hot_key' : [] | [Principal] }
-export interface AddOrRemoveNodeProvider { 'change' : [] | [Change] }
-export interface Amount { 'e8s' : bigint }
-export interface ApproveGenesisKyc { 'principals' : Array<Principal> }
-export interface Ballot { 'vote' : number, 'voting_power' : bigint }
-export interface BallotInfo {
-  'vote' : number,
-  'proposal_id' : [] | [ProposalId],
+export type ActionAuxiliary = {
+    'TransferSnsTreasuryFunds' : MintSnsTokensActionAuxiliary
+  } |
+  { 'MintSnsTokens' : MintSnsTokensActionAuxiliary } |
+  { 'AdvanceSnsTargetVersion' : AdvanceSnsTargetVersionActionAuxiliary };
+export interface AddNeuronPermissions {
+  'permissions_to_add' : [] | [NeuronPermissionList],
+  'principal_id' : [] | [Principal],
 }
-export type By = { 'NeuronIdOrSubaccount' : {} } |
-  { 'MemoAndController' : ClaimOrRefreshNeuronFromAccount } |
-  { 'Memo' : bigint };
-export interface Canister { 'id' : [] | [Principal] }
-export interface CanisterSettings {
-  'freezing_threshold' : [] | [bigint],
-  'wasm_memory_threshold' : [] | [bigint],
-  'controllers' : [] | [Controllers],
-  'log_visibility' : [] | [number],
-  'wasm_memory_limit' : [] | [bigint],
-  'memory_allocation' : [] | [bigint],
-  'compute_allocation' : [] | [bigint],
+export interface AdvanceSnsTargetVersion { 'new_target' : [] | [SnsVersion] }
+export interface AdvanceSnsTargetVersionActionAuxiliary {
+  'target_version' : [] | [SnsVersion],
+}
+export interface Amount { 'e8s' : bigint }
+export interface Ballot {
+  'vote' : number,
+  'cast_timestamp_seconds' : bigint,
+  'voting_power' : bigint,
+}
+export type By = { 'MemoAndController' : MemoAndController } |
+  { 'NeuronId' : {} };
+export interface CachedUpgradeSteps {
+  'upgrade_steps' : [] | [Versions],
+  'response_timestamp_seconds' : [] | [bigint],
+  'requested_timestamp_seconds' : [] | [bigint],
 }
 export interface CanisterStatusResultV2 {
-  'status' : [] | [number],
-  'freezing_threshold' : [] | [bigint],
-  'controllers' : Array<Principal>,
-  'memory_size' : [] | [bigint],
-  'cycles' : [] | [bigint],
-  'idle_cycles_burned_per_day' : [] | [bigint],
-  'module_hash' : Uint8Array | number[],
+  'status' : CanisterStatusType,
+  'memory_size' : bigint,
+  'cycles' : bigint,
+  'settings' : DefiniteCanisterSettingsArgs,
+  'query_stats' : [] | [QueryStats],
+  'idle_cycles_burned_per_day' : bigint,
+  'module_hash' : [] | [Uint8Array | number[]],
 }
-export interface CanisterSummary {
-  'status' : [] | [CanisterStatusResultV2],
-  'canister_id' : [] | [Principal],
-}
-export type Change = { 'ToRemove' : NodeProvider } |
-  { 'ToAdd' : NodeProvider };
+export type CanisterStatusType = { 'stopped' : null } |
+  { 'stopping' : null } |
+  { 'running' : null };
 export interface ChangeAutoStakeMaturity {
   'requested_setting_for_auto_stake_maturity' : boolean,
 }
+export interface ChunkedCanisterWasm {
+  'wasm_module_hash' : Uint8Array | number[],
+  'chunk_hashes_list' : Array<Uint8Array | number[]>,
+  'store_canister_id' : [] | [Principal],
+}
 export interface ClaimOrRefresh { 'by' : [] | [By] }
-export interface ClaimOrRefreshNeuronFromAccount {
-  'controller' : [] | [Principal],
-  'memo' : bigint,
-}
-export interface ClaimOrRefreshNeuronFromAccountResponse {
-  'result' : [] | [Result_1],
-}
 export interface ClaimOrRefreshResponse {
   'refreshed_neuron_id' : [] | [NeuronId],
 }
-export type Command = { 'Spawn' : Spawn } |
-  { 'Split' : Split } |
+export interface ClaimSwapNeuronsRequest {
+  'neuron_recipes' : [] | [NeuronRecipes],
+}
+export interface ClaimSwapNeuronsResponse {
+  'claim_swap_neurons_result' : [] | [ClaimSwapNeuronsResult],
+}
+export type ClaimSwapNeuronsResult = { 'Ok' : ClaimedSwapNeurons } |
+  { 'Err' : number };
+export interface ClaimedSwapNeurons { 'swap_neurons' : Array<SwapNeuron> }
+export type Command = { 'Split' : Split } |
   { 'Follow' : Follow } |
   { 'DisburseMaturity' : DisburseMaturity } |
-  { 'RefreshVotingPower' : RefreshVotingPower } |
   { 'ClaimOrRefresh' : ClaimOrRefresh } |
   { 'Configure' : Configure } |
   { 'RegisterVote' : RegisterVote } |
-  { 'Merge' : Merge } |
-  { 'DisburseToNeuron' : DisburseToNeuron } |
   { 'SetFollowing' : SetFollowing } |
   { 'MakeProposal' : Proposal } |
   { 'StakeMaturity' : StakeMaturity } |
+  { 'RemoveNeuronPermissions' : RemoveNeuronPermissions } |
+  { 'AddNeuronPermissions' : AddNeuronPermissions } |
   { 'MergeMaturity' : MergeMaturity } |
   { 'Disburse' : Disburse };
 export type Command_1 = { 'Error' : GovernanceError } |
-  { 'Spawn' : SpawnResponse } |
-  { 'Split' : SpawnResponse } |
+  { 'Split' : SplitResponse } |
   { 'Follow' : {} } |
   { 'DisburseMaturity' : DisburseMaturityResponse } |
-  { 'RefreshVotingPower' : RefreshVotingPowerResponse } |
   { 'ClaimOrRefresh' : ClaimOrRefreshResponse } |
   { 'Configure' : {} } |
   { 'RegisterVote' : {} } |
-  { 'Merge' : MergeResponse } |
-  { 'DisburseToNeuron' : SpawnResponse } |
-  { 'SetFollowing' : SetFollowingResponse } |
-  { 'MakeProposal' : MakeProposalResponse } |
+  { 'SetFollowing' : {} } |
+  { 'MakeProposal' : GetProposal } |
+  { 'RemoveNeuronPermission' : {} } |
   { 'StakeMaturity' : StakeMaturityResponse } |
   { 'MergeMaturity' : MergeMaturityResponse } |
-  { 'Disburse' : DisburseResponse };
-export type Command_2 = { 'Spawn' : NeuronId } |
-  { 'Split' : Split } |
+  { 'Disburse' : DisburseResponse } |
+  { 'AddNeuronPermission' : {} };
+export type Command_2 = { 'Split' : Split } |
+  { 'Follow' : Follow } |
+  { 'DisburseMaturity' : DisburseMaturity } |
   { 'Configure' : Configure } |
-  { 'Merge' : Merge } |
-  { 'DisburseToNeuron' : DisburseToNeuron } |
+  { 'RegisterVote' : RegisterVote } |
+  { 'SetFollowing' : SetFollowing } |
   { 'SyncCommand' : {} } |
+  { 'MakeProposal' : Proposal } |
+  { 'FinalizeDisburseMaturity' : FinalizeDisburseMaturity } |
   { 'ClaimOrRefreshNeuron' : ClaimOrRefresh } |
+  { 'RemoveNeuronPermissions' : RemoveNeuronPermissions } |
+  { 'AddNeuronPermissions' : AddNeuronPermissions } |
   { 'MergeMaturity' : MergeMaturity } |
   { 'Disburse' : Disburse };
-export interface Committed {
-  'total_direct_contribution_icp_e8s' : [] | [bigint],
-  'total_neurons_fund_contribution_icp_e8s' : [] | [bigint],
-  'sns_governance_canister_id' : [] | [Principal],
-}
-export interface Committed_1 {
-  'total_direct_participation_icp_e8s' : [] | [bigint],
-  'total_neurons_fund_participation_icp_e8s' : [] | [bigint],
-  'sns_governance_canister_id' : [] | [Principal],
-}
 export interface Configure { 'operation' : [] | [Operation] }
-export interface Controllers { 'controllers' : Array<Principal> }
-export interface Countries { 'iso_codes' : Array<string> }
-export interface CreateServiceNervousSystem {
-  'url' : [] | [string],
-  'governance_parameters' : [] | [GovernanceParameters],
-  'fallback_controller_principal_ids' : Array<Principal>,
-  'logo' : [] | [Image],
-  'name' : [] | [string],
-  'ledger_parameters' : [] | [LedgerParameters],
-  'description' : [] | [string],
-  'dapp_canisters' : Array<Canister>,
-  'swap_parameters' : [] | [SwapParameters],
-  'initial_token_distribution' : [] | [InitialTokenDistribution],
-}
-export interface DateRangeFilter {
-  'start_timestamp_seconds' : [] | [bigint],
-  'end_timestamp_seconds' : [] | [bigint],
-}
 export interface Decimal { 'human_readable' : [] | [string] }
-export interface DerivedProposalInformation {
-  'swap_background_information' : [] | [SwapBackgroundInformation],
+export interface DefaultFollowees { 'followees' : Array<[bigint, Followees]> }
+export interface DefiniteCanisterSettingsArgs {
+  'freezing_threshold' : bigint,
+  'wasm_memory_threshold' : [] | [bigint],
+  'controllers' : Array<Principal>,
+  'wasm_memory_limit' : [] | [bigint],
+  'memory_allocation' : bigint,
+  'compute_allocation' : bigint,
 }
-export interface DeveloperDistribution {
-  'developer_neurons' : Array<NeuronDistribution>,
+export interface DeregisterDappCanisters {
+  'canister_ids' : Array<Principal>,
+  'new_controllers' : Array<Principal>,
 }
 export interface Disburse {
-  'to_account' : [] | [AccountIdentifier],
+  'to_account' : [] | [Account],
   'amount' : [] | [Amount],
 }
 export interface DisburseMaturity {
-  'to_account_identifier' : [] | [AccountIdentifier],
   'to_account' : [] | [Account],
   'percentage_to_disburse' : number,
 }
+export interface DisburseMaturityInProgress {
+  'timestamp_of_disbursement_seconds' : bigint,
+  'amount_e8s' : bigint,
+  'account_to_disburse_to' : [] | [Account],
+  'finalize_disbursement_timestamp_seconds' : [] | [bigint],
+}
 export interface DisburseMaturityResponse {
-  'amount_disbursed_e8s' : [] | [bigint],
+  'amount_disbursed_e8s' : bigint,
+  'amount_deducted_e8s' : [] | [bigint],
 }
 export interface DisburseResponse { 'transfer_block_height' : bigint }
-export interface DisburseToNeuron {
-  'dissolve_delay_seconds' : bigint,
-  'kyc_verified' : boolean,
-  'amount_e8s' : bigint,
-  'new_controller' : [] | [Principal],
-  'nonce' : bigint,
-}
 export type DissolveState = { 'DissolveDelaySeconds' : bigint } |
   { 'WhenDissolvedTimestampSeconds' : bigint };
-export interface Duration { 'seconds' : [] | [bigint] }
-export interface ExecuteNnsFunction {
-  'nns_function' : number,
+export interface ExecuteGenericNervousSystemFunction {
+  'function_id' : bigint,
   'payload' : Uint8Array | number[],
 }
-export interface Follow { 'topic' : number, 'followees' : Array<NeuronId> }
+export interface ExtensionInit { 'value' : [] | [PreciseValue] }
+export interface FinalizeDisburseMaturity {
+  'amount_to_be_disbursed_e8s' : bigint,
+  'to_account' : [] | [Account],
+}
+export interface Follow {
+  'function_id' : bigint,
+  'followees' : Array<NeuronId>,
+}
+export interface Followee {
+  'alias' : [] | [string],
+  'neuron_id' : [] | [NeuronId],
+}
 export interface Followees { 'followees' : Array<NeuronId> }
 export interface FolloweesForTopic {
-  'topic' : [] | [number],
-  'followees' : [] | [Array<NeuronId>],
+  'topic' : [] | [Topic],
+  'followees' : Array<Followee>,
 }
-export interface FulfillSubnetRentalRequest {
-  'user' : [] | [Principal],
-  'replica_version_id' : [] | [string],
-  'node_ids' : [] | [Array<Principal>],
+export type FunctionType = { 'NativeNervousSystemFunction' : {} } |
+  { 'GenericNervousSystemFunction' : GenericNervousSystemFunction };
+export interface GenericNervousSystemFunction {
+  'topic' : [] | [Topic],
+  'validator_canister_id' : [] | [Principal],
+  'target_canister_id' : [] | [Principal],
+  'validator_method_name' : [] | [string],
+  'target_method_name' : [] | [string],
 }
-export interface GetNeuronsFundAuditInfoRequest {
-  'nns_proposal_id' : [] | [ProposalId],
+export interface GetMaturityModulationResponse {
+  'maturity_modulation' : [] | [MaturityModulation],
 }
-export interface GetNeuronsFundAuditInfoResponse { 'result' : [] | [Result_6] }
-export interface GlobalTimeOfDay {
-  'seconds_after_utc_midnight' : [] | [bigint],
+export interface GetMetadataResponse {
+  'url' : [] | [string],
+  'logo' : [] | [string],
+  'name' : [] | [string],
+  'description' : [] | [string],
+}
+export interface GetMetricsRequest { 'time_window_seconds' : [] | [bigint] }
+export interface GetMetricsResponse {
+  'get_metrics_result' : [] | [GetMetricsResult],
+}
+export type GetMetricsResult = { 'Ok' : Metrics } |
+  { 'Err' : GovernanceError };
+export interface GetModeResponse { 'mode' : [] | [number] }
+export interface GetNeuron { 'neuron_id' : [] | [NeuronId] }
+export interface GetNeuronResponse { 'result' : [] | [Result] }
+export interface GetProposal { 'proposal_id' : [] | [ProposalId] }
+export interface GetProposalResponse { 'result' : [] | [Result_1] }
+export interface GetRunningSnsVersionResponse {
+  'deployed_version' : [] | [Version],
+  'pending_version' : [] | [
+    {
+      'mark_failed_at_seconds' : bigint,
+      'checking_upgrade_lock' : bigint,
+      'proposal_id' : bigint,
+      'target_version' : [] | [Version],
+    }
+  ],
+}
+export interface GetSnsInitializationParametersResponse {
+  'sns_initialization_parameters' : string,
+}
+export interface GetTimersResponse { 'timers' : [] | [Timers] }
+export interface GetUpgradeJournalRequest {
+  'offset' : [] | [bigint],
+  'limit' : [] | [bigint],
+}
+export interface GetUpgradeJournalResponse {
+  'upgrade_journal' : [] | [UpgradeJournal],
+  'upgrade_steps' : [] | [Versions],
+  'response_timestamp_seconds' : [] | [bigint],
+  'deployed_version' : [] | [Version],
+  'target_version' : [] | [Version],
+  'upgrade_journal_entry_count' : [] | [bigint],
 }
 export interface Governance {
-  'default_followees' : Array<[number, Followees]>,
-  'making_sns_proposal' : [] | [MakingSnsProposal],
-  'most_recent_monthly_node_provider_rewards' : [] | [
-    MonthlyNodeProviderRewards
-  ],
-  'maturity_modulation_last_updated_at_timestamp_seconds' : [] | [bigint],
-  'wait_for_quiet_threshold_seconds' : bigint,
+  'root_canister_id' : [] | [Principal],
+  'timers' : [] | [Timers],
+  'cached_upgrade_steps' : [] | [CachedUpgradeSteps],
+  'id_to_nervous_system_functions' : Array<[bigint, NervousSystemFunction]>,
   'metrics' : [] | [GovernanceCachedMetrics],
-  'neuron_management_voting_period_seconds' : [] | [bigint],
-  'node_providers' : Array<NodeProvider>,
-  'cached_daily_maturity_modulation_basis_points' : [] | [number],
-  'economics' : [] | [NetworkEconomics],
-  'restore_aging_summary' : [] | [RestoreAgingSummary],
-  'spawning_neurons' : [] | [boolean],
+  'maturity_modulation' : [] | [MaturityModulation],
+  'upgrade_journal' : [] | [UpgradeJournal],
+  'mode' : number,
+  'parameters' : [] | [NervousSystemParameters],
+  'is_finalizing_disburse_maturity' : [] | [boolean],
+  'deployed_version' : [] | [Version],
+  'sns_initialization_parameters' : string,
   'latest_reward_event' : [] | [RewardEvent],
-  'to_claim_transfers' : Array<NeuronStakeTransfer>,
-  'short_voting_period_seconds' : bigint,
+  'pending_version' : [] | [PendingVersion],
+  'swap_canister_id' : [] | [Principal],
+  'ledger_canister_id' : [] | [Principal],
   'proposals' : Array<[bigint, ProposalData]>,
-  'xdr_conversion_rate' : [] | [XdrConversionRate],
-  'in_flight_commands' : Array<[bigint, NeuronInFlightCommand]>,
-  'neurons' : Array<[bigint, Neuron]>,
+  'in_flight_commands' : Array<[string, NeuronInFlightCommand]>,
+  'sns_metadata' : [] | [ManageSnsMetadata],
+  'neurons' : Array<[string, Neuron]>,
+  'target_version' : [] | [Version],
   'genesis_timestamp_seconds' : bigint,
 }
 export interface GovernanceCachedMetrics {
-  'total_maturity_e8s_equivalent' : bigint,
+  'treasury_metrics' : Array<TreasuryMetrics>,
   'not_dissolving_neurons_e8s_buckets' : Array<[bigint, number]>,
-  'dissolving_neurons_staked_maturity_e8s_equivalent_sum' : bigint,
   'garbage_collectable_neurons_count' : bigint,
-  'dissolving_neurons_staked_maturity_e8s_equivalent_buckets' : Array<
-    [bigint, number]
-  >,
   'neurons_with_invalid_stake_count' : bigint,
   'not_dissolving_neurons_count_buckets' : Array<[bigint, bigint]>,
-  'ect_neuron_count' : bigint,
-  'total_supply_icp' : bigint,
   'neurons_with_less_than_6_months_dissolve_delay_count' : bigint,
   'dissolved_neurons_count' : bigint,
-  'community_fund_total_maturity_e8s_equivalent' : bigint,
-  'total_staked_e8s_seed' : bigint,
-  'total_staked_maturity_e8s_equivalent_ect' : bigint,
   'total_staked_e8s' : bigint,
-  'fully_lost_voting_power_neuron_subset_metrics' : [] | [NeuronSubsetMetrics],
+  'total_supply_governance_tokens' : bigint,
+  'voting_power_metrics' : [] | [VotingPowerMetrics],
   'not_dissolving_neurons_count' : bigint,
-  'total_locked_e8s' : bigint,
-  'neurons_fund_total_active_neurons' : bigint,
-  'total_voting_power_non_self_authenticating_controller' : [] | [bigint],
-  'total_staked_maturity_e8s_equivalent' : bigint,
-  'not_dissolving_neurons_e8s_buckets_ect' : Array<[bigint, number]>,
-  'spawning_neurons_count' : bigint,
-  'declining_voting_power_neuron_subset_metrics' : [] | [NeuronSubsetMetrics],
-  'total_staked_e8s_ect' : bigint,
-  'not_dissolving_neurons_staked_maturity_e8s_equivalent_sum' : bigint,
   'dissolved_neurons_e8s' : bigint,
-  'total_staked_e8s_non_self_authenticating_controller' : [] | [bigint],
-  'dissolving_neurons_e8s_buckets_seed' : Array<[bigint, number]>,
   'neurons_with_less_than_6_months_dissolve_delay_e8s' : bigint,
-  'not_dissolving_neurons_staked_maturity_e8s_equivalent_buckets' : Array<
-    [bigint, number]
-  >,
   'dissolving_neurons_count_buckets' : Array<[bigint, bigint]>,
-  'dissolving_neurons_e8s_buckets_ect' : Array<[bigint, number]>,
-  'non_self_authenticating_controller_neuron_subset_metrics' : [] | [
-    NeuronSubsetMetrics
-  ],
   'dissolving_neurons_count' : bigint,
   'dissolving_neurons_e8s_buckets' : Array<[bigint, number]>,
-  'total_staked_maturity_e8s_equivalent_seed' : bigint,
-  'community_fund_total_staked_e8s' : bigint,
-  'not_dissolving_neurons_e8s_buckets_seed' : Array<[bigint, number]>,
-  'public_neuron_subset_metrics' : [] | [NeuronSubsetMetrics],
   'timestamp_seconds' : bigint,
-  'seed_neuron_count' : bigint,
 }
 export interface GovernanceError {
   'error_message' : string,
   'error_type' : number,
 }
-export interface GovernanceParameters {
-  'neuron_maximum_dissolve_delay_bonus' : [] | [Percentage],
-  'neuron_maximum_age_for_age_bonus' : [] | [Duration],
-  'neuron_maximum_dissolve_delay' : [] | [Duration],
-  'neuron_minimum_dissolve_delay_to_vote' : [] | [Duration],
-  'neuron_maximum_age_bonus' : [] | [Percentage],
-  'neuron_minimum_stake' : [] | [Tokens],
-  'proposal_wait_for_quiet_deadline_increase' : [] | [Duration],
-  'proposal_initial_voting_period' : [] | [Duration],
-  'proposal_rejection_fee' : [] | [Tokens],
-  'voting_reward_parameters' : [] | [VotingRewardParameters],
-}
-export interface IdealMatchedParticipationFunction {
-  'serialized_representation' : [] | [string],
-}
-export interface Image { 'base64_encoding' : [] | [string] }
 export interface IncreaseDissolveDelay {
   'additional_dissolve_delay_seconds' : number,
 }
-export interface InitialTokenDistribution {
-  'treasury_distribution' : [] | [SwapDistribution],
-  'developer_distribution' : [] | [DeveloperDistribution],
-  'swap_distribution' : [] | [SwapDistribution],
-}
-export interface InstallCode {
-  'skip_stopping_before_installing' : [] | [boolean],
-  'wasm_module_hash' : [] | [Uint8Array | number[]],
-  'canister_id' : [] | [Principal],
-  'arg_hash' : [] | [Uint8Array | number[]],
-  'install_mode' : [] | [number],
-}
-export interface InstallCodeRequest {
-  'arg' : [] | [Uint8Array | number[]],
-  'wasm_module' : [] | [Uint8Array | number[]],
-  'skip_stopping_before_installing' : [] | [boolean],
-  'canister_id' : [] | [Principal],
-  'install_mode' : [] | [number],
-}
-export interface KnownNeuron {
-  'id' : [] | [NeuronId],
-  'known_neuron_data' : [] | [KnownNeuronData],
-}
-export interface KnownNeuronData {
-  'name' : string,
-  'description' : [] | [string],
-}
-export interface LedgerParameters {
-  'transaction_fee' : [] | [Tokens],
-  'token_symbol' : [] | [string],
-  'token_logo' : [] | [Image],
-  'token_name' : [] | [string],
-}
-export interface ListKnownNeuronsResponse {
-  'known_neurons' : Array<KnownNeuron>,
+export interface ListNervousSystemFunctionsResponse {
+  'reserved_ids' : BigUint64Array | bigint[],
+  'functions' : Array<NervousSystemFunction>,
 }
 export interface ListNeurons {
-  'page_size' : [] | [bigint],
-  'include_public_neurons_in_full_neurons' : [] | [boolean],
-  'neuron_ids' : BigUint64Array | bigint[],
-  'page_number' : [] | [bigint],
-  'include_empty_neurons_readable_by_caller' : [] | [boolean],
-  'neuron_subaccounts' : [] | [Array<NeuronSubaccount>],
-  'include_neurons_readable_by_caller' : boolean,
+  'of_principal' : [] | [Principal],
+  'limit' : number,
+  'start_page_at' : [] | [NeuronId],
 }
-export interface ListNeuronsResponse {
-  'neuron_infos' : Array<[bigint, NeuronInfo]>,
-  'full_neurons' : Array<Neuron>,
-  'total_pages_available' : [] | [bigint],
-}
-export interface ListNodeProviderRewardsRequest {
-  'date_filter' : [] | [DateRangeFilter],
-}
-export interface ListNodeProviderRewardsResponse {
-  'rewards' : Array<MonthlyNodeProviderRewards>,
-}
-export interface ListNodeProvidersResponse {
-  'node_providers' : Array<NodeProvider>,
-}
-export interface ListProposalInfo {
+export interface ListNeuronsResponse { 'neurons' : Array<Neuron> }
+export interface ListProposals {
   'include_reward_status' : Int32Array | number[],
-  'omit_large_fields' : [] | [boolean],
   'before_proposal' : [] | [ProposalId],
   'limit' : number,
-  'exclude_topic' : Int32Array | number[],
-  'include_all_manage_neuron_proposals' : [] | [boolean],
+  'exclude_type' : BigUint64Array | bigint[],
+  'include_topics' : [] | [Array<TopicSelector>],
   'include_status' : Int32Array | number[],
 }
-export interface ListProposalInfoResponse {
-  'proposal_info' : Array<ProposalInfo>,
+export interface ListProposalsResponse {
+  'include_ballots_by_caller' : [] | [boolean],
+  'proposals' : Array<ProposalData>,
+  'include_topic_filtering' : [] | [boolean],
 }
-export interface MakeProposalRequest {
-  'url' : string,
-  'title' : [] | [string],
-  'action' : [] | [ProposalActionRequest],
-  'summary' : string,
+export type ListTopicsRequest = {};
+export interface ListTopicsResponse {
+  'uncategorized_functions' : [] | [Array<NervousSystemFunction>],
+  'topics' : [] | [Array<TopicInfo>],
 }
-export interface MakeProposalResponse {
-  'message' : [] | [string],
-  'proposal_id' : [] | [ProposalId],
+export interface ManageDappCanisterSettings {
+  'freezing_threshold' : [] | [bigint],
+  'wasm_memory_threshold' : [] | [bigint],
+  'canister_ids' : Array<Principal>,
+  'reserved_cycles_limit' : [] | [bigint],
+  'log_visibility' : [] | [number],
+  'wasm_memory_limit' : [] | [bigint],
+  'memory_allocation' : [] | [bigint],
+  'compute_allocation' : [] | [bigint],
 }
-export interface MakingSnsProposal {
-  'proposal' : [] | [Proposal],
-  'caller' : [] | [Principal],
-  'proposer_id' : [] | [NeuronId],
+export interface ManageLedgerParameters {
+  'token_symbol' : [] | [string],
+  'transfer_fee' : [] | [bigint],
+  'token_logo' : [] | [string],
+  'token_name' : [] | [string],
 }
 export interface ManageNeuron {
-  'id' : [] | [NeuronId],
+  'subaccount' : Uint8Array | number[],
   'command' : [] | [Command],
-  'neuron_id_or_subaccount' : [] | [NeuronIdOrSubaccount],
-}
-export type ManageNeuronCommandRequest = { 'Spawn' : Spawn } |
-  { 'Split' : Split } |
-  { 'Follow' : Follow } |
-  { 'DisburseMaturity' : DisburseMaturity } |
-  { 'RefreshVotingPower' : RefreshVotingPower } |
-  { 'ClaimOrRefresh' : ClaimOrRefresh } |
-  { 'Configure' : Configure } |
-  { 'RegisterVote' : RegisterVote } |
-  { 'Merge' : Merge } |
-  { 'DisburseToNeuron' : DisburseToNeuron } |
-  { 'SetFollowing' : SetFollowing } |
-  { 'MakeProposal' : MakeProposalRequest } |
-  { 'StakeMaturity' : StakeMaturity } |
-  { 'MergeMaturity' : MergeMaturity } |
-  { 'Disburse' : Disburse };
-export interface ManageNeuronRequest {
-  'id' : [] | [NeuronId],
-  'command' : [] | [ManageNeuronCommandRequest],
-  'neuron_id_or_subaccount' : [] | [NeuronIdOrSubaccount],
 }
 export interface ManageNeuronResponse { 'command' : [] | [Command_1] }
-export interface MaturityDisbursement {
-  'account_identifier_to_disburse_to' : [] | [AccountIdentifier],
-  'timestamp_of_disbursement_seconds' : [] | [bigint],
-  'amount_e8s' : [] | [bigint],
-  'account_to_disburse_to' : [] | [Account],
-  'finalize_disbursement_timestamp_seconds' : [] | [bigint],
+export interface ManageSnsMetadata {
+  'url' : [] | [string],
+  'logo' : [] | [string],
+  'name' : [] | [string],
+  'description' : [] | [string],
 }
-export interface Merge { 'source_neuron_id' : [] | [NeuronId] }
+export interface MaturityModulation {
+  'current_basis_points' : [] | [number],
+  'updated_at_timestamp_seconds' : [] | [bigint],
+}
+export interface MemoAndController {
+  'controller' : [] | [Principal],
+  'memo' : bigint,
+}
 export interface MergeMaturity { 'percentage_to_merge' : number }
 export interface MergeMaturityResponse {
   'merged_maturity_e8s' : bigint,
   'new_stake_e8s' : bigint,
 }
-export interface MergeResponse {
-  'target_neuron' : [] | [Neuron],
-  'source_neuron' : [] | [Neuron],
-  'target_neuron_info' : [] | [NeuronInfo],
-  'source_neuron_info' : [] | [NeuronInfo],
+export interface Metrics {
+  'treasury_metrics' : [] | [Array<TreasuryMetrics>],
+  'voting_power_metrics' : [] | [VotingPowerMetrics],
+  'last_ledger_block_timestamp' : [] | [bigint],
+  'num_recently_executed_proposals' : [] | [bigint],
+  'num_recently_submitted_proposals' : [] | [bigint],
+  'genesis_timestamp_seconds' : [] | [bigint],
 }
-export interface MonthlyNodeProviderRewards {
-  'minimum_xdr_permyriad_per_icp' : [] | [bigint],
-  'registry_version' : [] | [bigint],
-  'node_providers' : Array<NodeProvider>,
-  'timestamp' : bigint,
-  'rewards' : Array<RewardNodeProvider>,
-  'xdr_conversion_rate' : [] | [XdrConversionRate],
-  'maximum_node_provider_rewards_e8s' : [] | [bigint],
+export interface MintSnsTokens {
+  'to_principal' : [] | [Principal],
+  'to_subaccount' : [] | [Subaccount],
+  'memo' : [] | [bigint],
+  'amount_e8s' : [] | [bigint],
 }
+export interface MintSnsTokensActionAuxiliary { 'valuation' : [] | [Valuation] }
 export interface Motion { 'motion_text' : string }
-export interface NetworkEconomics {
-  'neuron_minimum_stake_e8s' : bigint,
-  'voting_power_economics' : [] | [VotingPowerEconomics],
-  'max_proposals_to_keep_per_topic' : number,
-  'neuron_management_fee_per_proposal_e8s' : bigint,
-  'reject_cost_e8s' : bigint,
-  'transaction_fee_e8s' : bigint,
-  'neuron_spawn_dissolve_delay_seconds' : bigint,
-  'minimum_icp_xdr_rate' : bigint,
-  'maximum_node_provider_rewards_e8s' : bigint,
-  'neurons_fund_economics' : [] | [NeuronsFundEconomics],
+export interface NervousSystemFunction {
+  'id' : bigint,
+  'name' : string,
+  'description' : [] | [string],
+  'function_type' : [] | [FunctionType],
+}
+export interface NervousSystemParameters {
+  'default_followees' : [] | [DefaultFollowees],
+  'max_dissolve_delay_seconds' : [] | [bigint],
+  'max_dissolve_delay_bonus_percentage' : [] | [bigint],
+  'max_followees_per_function' : [] | [bigint],
+  'automatically_advance_target_version' : [] | [boolean],
+  'neuron_claimer_permissions' : [] | [NeuronPermissionList],
+  'neuron_minimum_stake_e8s' : [] | [bigint],
+  'max_neuron_age_for_age_bonus' : [] | [bigint],
+  'initial_voting_period_seconds' : [] | [bigint],
+  'neuron_minimum_dissolve_delay_to_vote_seconds' : [] | [bigint],
+  'reject_cost_e8s' : [] | [bigint],
+  'max_proposals_to_keep_per_action' : [] | [number],
+  'wait_for_quiet_deadline_increase_seconds' : [] | [bigint],
+  'max_number_of_neurons' : [] | [bigint],
+  'transaction_fee_e8s' : [] | [bigint],
+  'max_number_of_proposals_with_ballots' : [] | [bigint],
+  'max_age_bonus_percentage' : [] | [bigint],
+  'neuron_grantable_permissions' : [] | [NeuronPermissionList],
+  'voting_rewards_parameters' : [] | [VotingRewardsParameters],
+  'maturity_modulation_disabled' : [] | [boolean],
+  'max_number_of_principals_per_neuron' : [] | [bigint],
 }
 export interface Neuron {
   'id' : [] | [NeuronId],
   'staked_maturity_e8s_equivalent' : [] | [bigint],
-  'controller' : [] | [Principal],
-  'recent_ballots' : Array<BallotInfo>,
-  'voting_power_refreshed_timestamp_seconds' : [] | [bigint],
-  'kyc_verified' : boolean,
-  'potential_voting_power' : [] | [bigint],
-  'neuron_type' : [] | [number],
-  'not_for_profit' : boolean,
+  'permissions' : Array<NeuronPermission>,
   'maturity_e8s_equivalent' : bigint,
-  'deciding_voting_power' : [] | [bigint],
   'cached_neuron_stake_e8s' : bigint,
   'created_timestamp_seconds' : bigint,
+  'topic_followees' : [] | [
+    { 'topic_id_to_followees' : Array<[number, FolloweesForTopic]> }
+  ],
+  'source_nns_neuron_id' : [] | [bigint],
   'auto_stake_maturity' : [] | [boolean],
   'aging_since_timestamp_seconds' : bigint,
-  'hot_keys' : Array<Principal>,
-  'account' : Uint8Array | number[],
-  'joined_community_fund_timestamp_seconds' : [] | [bigint],
-  'maturity_disbursements_in_progress' : [] | [Array<MaturityDisbursement>],
   'dissolve_state' : [] | [DissolveState],
-  'followees' : Array<[number, Followees]>,
+  'voting_power_percentage_multiplier' : bigint,
+  'vesting_period_seconds' : [] | [bigint],
+  'disburse_maturity_in_progress' : Array<DisburseMaturityInProgress>,
+  'followees' : Array<[bigint, Followees]>,
   'neuron_fees_e8s' : bigint,
-  'visibility' : [] | [number],
-  'transfer' : [] | [NeuronStakeTransfer],
-  'known_neuron_data' : [] | [KnownNeuronData],
-  'spawn_at_timestamp_seconds' : [] | [bigint],
 }
-export interface NeuronBasketConstructionParameters {
-  'dissolve_delay_interval' : [] | [Duration],
-  'count' : [] | [bigint],
-}
-export interface NeuronBasketConstructionParameters_1 {
-  'dissolve_delay_interval_seconds' : bigint,
-  'count' : bigint,
-}
-export interface NeuronDistribution {
-  'controller' : [] | [Principal],
-  'dissolve_delay' : [] | [Duration],
-  'memo' : [] | [bigint],
-  'vesting_period' : [] | [Duration],
-  'stake' : [] | [Tokens],
-}
-export interface NeuronId { 'id' : bigint }
-export type NeuronIdOrSubaccount = { 'Subaccount' : Uint8Array | number[] } |
-  { 'NeuronId' : NeuronId };
+export interface NeuronId { 'id' : Uint8Array | number[] }
+export interface NeuronIds { 'neuron_ids' : Array<NeuronId> }
 export interface NeuronInFlightCommand {
   'command' : [] | [Command_2],
   'timestamp' : bigint,
 }
-export interface NeuronInfo {
-  'dissolve_delay_seconds' : bigint,
-  'recent_ballots' : Array<BallotInfo>,
-  'voting_power_refreshed_timestamp_seconds' : [] | [bigint],
-  'potential_voting_power' : [] | [bigint],
-  'neuron_type' : [] | [number],
-  'deciding_voting_power' : [] | [bigint],
-  'created_timestamp_seconds' : bigint,
-  'state' : number,
-  'stake_e8s' : bigint,
-  'joined_community_fund_timestamp_seconds' : [] | [bigint],
-  'retrieved_at_timestamp_seconds' : bigint,
-  'visibility' : [] | [number],
-  'known_neuron_data' : [] | [KnownNeuronData],
-  'voting_power' : bigint,
-  'age_seconds' : bigint,
+export interface NeuronPermission {
+  'principal' : [] | [Principal],
+  'permission_type' : Int32Array | number[],
 }
-export interface NeuronStakeTransfer {
-  'to_subaccount' : Uint8Array | number[],
-  'neuron_stake_e8s' : bigint,
-  'from' : [] | [Principal],
-  'memo' : bigint,
-  'from_subaccount' : Uint8Array | number[],
-  'transfer_timestamp' : bigint,
-  'block_height' : bigint,
-}
-export interface NeuronSubaccount { 'subaccount' : Uint8Array | number[] }
-export interface NeuronSubsetMetrics {
-  'total_maturity_e8s_equivalent' : [] | [bigint],
-  'maturity_e8s_equivalent_buckets' : Array<[bigint, bigint]>,
-  'voting_power_buckets' : Array<[bigint, bigint]>,
-  'total_staked_e8s' : [] | [bigint],
-  'count' : [] | [bigint],
-  'deciding_voting_power_buckets' : Array<[bigint, bigint]>,
-  'total_staked_maturity_e8s_equivalent' : [] | [bigint],
-  'total_potential_voting_power' : [] | [bigint],
-  'total_deciding_voting_power' : [] | [bigint],
-  'staked_maturity_e8s_equivalent_buckets' : Array<[bigint, bigint]>,
-  'staked_e8s_buckets' : Array<[bigint, bigint]>,
-  'total_voting_power' : [] | [bigint],
-  'potential_voting_power_buckets' : Array<[bigint, bigint]>,
-  'count_buckets' : Array<[bigint, bigint]>,
-}
-export interface NeuronsFundAuditInfo {
-  'final_neurons_fund_participation' : [] | [NeuronsFundParticipation],
-  'initial_neurons_fund_participation' : [] | [NeuronsFundParticipation],
-  'neurons_fund_refunds' : [] | [NeuronsFundSnapshot],
-}
-export interface NeuronsFundData {
-  'final_neurons_fund_participation' : [] | [NeuronsFundParticipation],
-  'initial_neurons_fund_participation' : [] | [NeuronsFundParticipation],
-  'neurons_fund_refunds' : [] | [NeuronsFundSnapshot],
-}
-export interface NeuronsFundEconomics {
-  'maximum_icp_xdr_rate' : [] | [Percentage],
-  'neurons_fund_matched_funding_curve_coefficients' : [] | [
-    NeuronsFundMatchedFundingCurveCoefficients
-  ],
-  'max_theoretical_neurons_fund_participation_amount_xdr' : [] | [Decimal],
-  'minimum_icp_xdr_rate' : [] | [Percentage],
-}
-export interface NeuronsFundMatchedFundingCurveCoefficients {
-  'contribution_threshold_xdr' : [] | [Decimal],
-  'one_third_participation_milestone_xdr' : [] | [Decimal],
-  'full_participation_milestone_xdr' : [] | [Decimal],
-}
-export interface NeuronsFundNeuron {
+export interface NeuronPermissionList { 'permissions' : Int32Array | number[] }
+export interface NeuronRecipe {
   'controller' : [] | [Principal],
-  'hotkeys' : [] | [Principals],
-  'is_capped' : [] | [boolean],
+  'dissolve_delay_seconds' : [] | [bigint],
+  'participant' : [] | [Participant],
+  'stake_e8s' : [] | [bigint],
+  'followees' : [] | [NeuronIds],
+  'neuron_id' : [] | [NeuronId],
+}
+export interface NeuronRecipes { 'neuron_recipes' : Array<NeuronRecipe> }
+export interface NeuronsFund {
+  'nns_neuron_hotkeys' : [] | [Principals],
+  'nns_neuron_controller' : [] | [Principal],
   'nns_neuron_id' : [] | [bigint],
-  'amount_icp_e8s' : [] | [bigint],
 }
-export interface NeuronsFundNeuronPortion {
-  'controller' : [] | [Principal],
-  'hotkeys' : Array<Principal>,
-  'is_capped' : [] | [boolean],
-  'maturity_equivalent_icp_e8s' : [] | [bigint],
-  'nns_neuron_id' : [] | [NeuronId],
-  'amount_icp_e8s' : [] | [bigint],
-}
-export interface NeuronsFundParticipation {
-  'total_maturity_equivalent_icp_e8s' : [] | [bigint],
-  'intended_neurons_fund_participation_icp_e8s' : [] | [bigint],
-  'direct_participation_icp_e8s' : [] | [bigint],
-  'swap_participation_limits' : [] | [SwapParticipationLimits],
-  'max_neurons_fund_swap_participation_icp_e8s' : [] | [bigint],
-  'neurons_fund_reserves' : [] | [NeuronsFundSnapshot],
-  'ideal_matched_participation_function' : [] | [
-    IdealMatchedParticipationFunction
-  ],
-  'allocated_neurons_fund_participation_icp_e8s' : [] | [bigint],
-}
-export interface NeuronsFundSnapshot {
-  'neurons_fund_neuron_portions' : Array<NeuronsFundNeuronPortion>,
-}
-export interface NodeProvider {
-  'id' : [] | [Principal],
-  'reward_account' : [] | [AccountIdentifier],
-}
-export interface Ok { 'neurons_fund_audit_info' : [] | [NeuronsFundAuditInfo] }
-export interface Ok_1 {
-  'neurons_fund_neuron_portions' : Array<NeuronsFundNeuron>,
-}
-export interface OpenSnsTokenSwap {
-  'community_fund_investment_e8s' : [] | [bigint],
-  'target_swap_canister_id' : [] | [Principal],
-  'params' : [] | [Params],
-}
-export type Operation = { 'RemoveHotKey' : RemoveHotKey } |
-  { 'AddHotKey' : AddHotKey } |
-  { 'ChangeAutoStakeMaturity' : ChangeAutoStakeMaturity } |
+export type Operation = {
+    'ChangeAutoStakeMaturity' : ChangeAutoStakeMaturity
+  } |
   { 'StopDissolving' : {} } |
   { 'StartDissolving' : {} } |
   { 'IncreaseDissolveDelay' : IncreaseDissolveDelay } |
-  { 'SetVisibility' : SetVisibility } |
-  { 'JoinCommunityFund' : {} } |
-  { 'LeaveCommunityFund' : {} } |
   { 'SetDissolveTimestamp' : SetDissolveTimestamp };
-export interface Params {
-  'min_participant_icp_e8s' : bigint,
-  'neuron_basket_construction_parameters' : [] | [
-    NeuronBasketConstructionParameters_1
-  ],
-  'max_icp_e8s' : bigint,
-  'swap_due_timestamp_seconds' : bigint,
-  'min_participants' : number,
-  'sns_token_e8s' : bigint,
-  'sale_delay_seconds' : [] | [bigint],
-  'max_participant_icp_e8s' : bigint,
-  'min_direct_participation_icp_e8s' : [] | [bigint],
-  'min_icp_e8s' : bigint,
-  'max_direct_participation_icp_e8s' : [] | [bigint],
+export type Participant = { 'NeuronsFund' : NeuronsFund } |
+  { 'Direct' : {} };
+export interface PendingVersion {
+  'mark_failed_at_seconds' : bigint,
+  'checking_upgrade_lock' : bigint,
+  'proposal_id' : [] | [bigint],
+  'target_version' : [] | [Version],
 }
 export interface Percentage { 'basis_points' : [] | [bigint] }
+export type PreciseValue = { 'Int' : bigint } |
+  { 'Map' : Array<[string, PreciseValue]> } |
+  { 'Nat' : bigint } |
+  { 'Blob' : Uint8Array | number[] } |
+  { 'Bool' : boolean } |
+  { 'Text' : string } |
+  { 'Array' : Array<PreciseValue> };
 export interface Principals { 'principals' : Array<Principal> }
 export interface Proposal {
   'url' : string,
-  'title' : [] | [string],
+  'title' : string,
   'action' : [] | [Action],
   'summary' : string,
 }
-export type ProposalActionRequest = { 'RegisterKnownNeuron' : KnownNeuron } |
-  { 'FulfillSubnetRentalRequest' : FulfillSubnetRentalRequest } |
-  { 'ManageNeuron' : ManageNeuronRequest } |
-  { 'UpdateCanisterSettings' : UpdateCanisterSettings } |
-  { 'InstallCode' : InstallCodeRequest } |
-  { 'StopOrStartCanister' : StopOrStartCanister } |
-  { 'CreateServiceNervousSystem' : CreateServiceNervousSystem } |
-  { 'ExecuteNnsFunction' : ExecuteNnsFunction } |
-  { 'RewardNodeProvider' : RewardNodeProvider } |
-  { 'RewardNodeProviders' : RewardNodeProviders } |
-  { 'ManageNetworkEconomics' : NetworkEconomics } |
-  { 'ApproveGenesisKyc' : Principals } |
-  { 'AddOrRemoveNodeProvider' : AddOrRemoveNodeProvider } |
-  { 'Motion' : Motion };
 export interface ProposalData {
   'id' : [] | [ProposalId],
-  'topic' : [] | [number],
+  'payload_text_rendering' : [] | [string],
+  'topic' : [] | [Topic],
+  'action' : bigint,
   'failure_reason' : [] | [GovernanceError],
-  'ballots' : Array<[bigint, Ballot]>,
-  'proposal_timestamp_seconds' : bigint,
+  'action_auxiliary' : [] | [ActionAuxiliary],
+  'ballots' : Array<[string, Ballot]>,
+  'minimum_yes_proportion_of_total' : [] | [Percentage],
   'reward_event_round' : bigint,
   'failed_timestamp_seconds' : bigint,
-  'neurons_fund_data' : [] | [NeuronsFundData],
+  'reward_event_end_timestamp_seconds' : [] | [bigint],
+  'proposal_creation_timestamp_seconds' : bigint,
+  'initial_voting_period_seconds' : bigint,
   'reject_cost_e8s' : bigint,
-  'derived_proposal_information' : [] | [DerivedProposalInformation],
   'latest_tally' : [] | [Tally],
-  'total_potential_voting_power' : [] | [bigint],
-  'sns_token_swap_lifecycle' : [] | [number],
+  'wait_for_quiet_deadline_increase_seconds' : bigint,
   'decided_timestamp_seconds' : bigint,
   'proposal' : [] | [Proposal],
   'proposer' : [] | [NeuronId],
   'wait_for_quiet_state' : [] | [WaitForQuietState],
+  'minimum_yes_proportion_of_exercised' : [] | [Percentage],
+  'is_eligible_for_rewards' : boolean,
   'executed_timestamp_seconds' : bigint,
-  'original_total_community_fund_maturity_e8s_equivalent' : [] | [bigint],
 }
 export interface ProposalId { 'id' : bigint }
-export interface ProposalInfo {
-  'id' : [] | [ProposalId],
-  'status' : number,
-  'topic' : number,
-  'failure_reason' : [] | [GovernanceError],
-  'ballots' : Array<[bigint, Ballot]>,
-  'proposal_timestamp_seconds' : bigint,
-  'reward_event_round' : bigint,
-  'deadline_timestamp_seconds' : [] | [bigint],
-  'failed_timestamp_seconds' : bigint,
-  'reject_cost_e8s' : bigint,
-  'derived_proposal_information' : [] | [DerivedProposalInformation],
-  'latest_tally' : [] | [Tally],
-  'total_potential_voting_power' : [] | [bigint],
-  'reward_status' : number,
-  'decided_timestamp_seconds' : bigint,
-  'proposal' : [] | [Proposal],
-  'proposer' : [] | [NeuronId],
-  'executed_timestamp_seconds' : bigint,
+export interface QueryStats {
+  'response_payload_bytes_total' : [] | [bigint],
+  'num_instructions_total' : [] | [bigint],
+  'num_calls_total' : [] | [bigint],
+  'request_payload_bytes_total' : [] | [bigint],
 }
-export type RefreshVotingPower = {};
-export type RefreshVotingPowerResponse = {};
+export interface RegisterDappCanisters { 'canister_ids' : Array<Principal> }
+export interface RegisterExtension {
+  'chunked_canister_wasm' : [] | [ChunkedCanisterWasm],
+  'extension_init' : [] | [ExtensionInit],
+}
 export interface RegisterVote {
   'vote' : number,
   'proposal' : [] | [ProposalId],
 }
-export interface RemoveHotKey { 'hot_key_to_remove' : [] | [Principal] }
-export interface RestoreAgingNeuronGroup {
-  'count' : [] | [bigint],
-  'previous_total_stake_e8s' : [] | [bigint],
-  'current_total_stake_e8s' : [] | [bigint],
-  'group_type' : number,
+export interface RemoveNeuronPermissions {
+  'permissions_to_remove' : [] | [NeuronPermissionList],
+  'principal_id' : [] | [Principal],
 }
-export interface RestoreAgingSummary {
-  'groups' : Array<RestoreAgingNeuronGroup>,
-  'timestamp_seconds' : [] | [bigint],
-}
-export type Result = { 'Ok' : null } |
-  { 'Err' : GovernanceError };
+export type Result = { 'Error' : GovernanceError } |
+  { 'Neuron' : Neuron };
 export type Result_1 = { 'Error' : GovernanceError } |
-  { 'NeuronId' : NeuronId };
-export type Result_10 = { 'Ok' : Ok_1 } |
-  { 'Err' : GovernanceError };
-export type Result_2 = { 'Ok' : Neuron } |
-  { 'Err' : GovernanceError };
-export type Result_3 = { 'Ok' : GovernanceCachedMetrics } |
-  { 'Err' : GovernanceError };
-export type Result_4 = { 'Ok' : MonthlyNodeProviderRewards } |
-  { 'Err' : GovernanceError };
-export type Result_5 = { 'Ok' : NeuronInfo } |
-  { 'Err' : GovernanceError };
-export type Result_6 = { 'Ok' : Ok } |
-  { 'Err' : GovernanceError };
-export type Result_7 = { 'Ok' : NodeProvider } |
-  { 'Err' : GovernanceError };
-export type Result_8 = { 'Committed' : Committed } |
-  { 'Aborted' : {} };
-export type Result_9 = { 'Committed' : Committed_1 } |
-  { 'Aborted' : {} };
+  { 'Proposal' : ProposalData };
 export interface RewardEvent {
   'rounds_since_last_distribution' : [] | [bigint],
-  'day_after_genesis' : bigint,
   'actual_timestamp_seconds' : bigint,
-  'total_available_e8s_equivalent' : bigint,
-  'latest_round_available_e8s_equivalent' : [] | [bigint],
+  'end_timestamp_seconds' : [] | [bigint],
+  'total_available_e8s_equivalent' : [] | [bigint],
   'distributed_e8s_equivalent' : bigint,
+  'round' : bigint,
   'settled_proposals' : Array<ProposalId>,
 }
-export type RewardMode = { 'RewardToNeuron' : RewardToNeuron } |
-  { 'RewardToAccount' : RewardToAccount };
-export interface RewardNodeProvider {
-  'node_provider' : [] | [NodeProvider],
-  'reward_mode' : [] | [RewardMode],
-  'amount_e8s' : bigint,
-}
-export interface RewardNodeProviders {
-  'use_registry_derived_rewards' : [] | [boolean],
-  'rewards' : Array<RewardNodeProvider>,
-}
-export interface RewardToAccount { 'to_account' : [] | [AccountIdentifier] }
-export interface RewardToNeuron { 'dissolve_delay_seconds' : bigint }
-export interface SetDefaultFollowees {
-  'default_followees' : Array<[number, Followees]>,
-}
 export interface SetDissolveTimestamp { 'dissolve_timestamp_seconds' : bigint }
-export interface SetFollowing {
-  'topic_following' : [] | [Array<FolloweesForTopic>],
+export interface SetFollowing { 'topic_following' : Array<FolloweesForTopic> }
+export interface SetMode { 'mode' : number }
+export interface SetTopicsForCustomProposals {
+  'custom_function_id_to_topic' : Array<[bigint, Topic]>,
 }
-export type SetFollowingResponse = {};
-export interface SetOpenTimeWindowRequest {
-  'open_time_window' : [] | [TimeWindow],
+export interface SnsVersion {
+  'archive_wasm_hash' : [] | [Uint8Array | number[]],
+  'root_wasm_hash' : [] | [Uint8Array | number[]],
+  'swap_wasm_hash' : [] | [Uint8Array | number[]],
+  'ledger_wasm_hash' : [] | [Uint8Array | number[]],
+  'governance_wasm_hash' : [] | [Uint8Array | number[]],
+  'index_wasm_hash' : [] | [Uint8Array | number[]],
 }
-export interface SetSnsTokenSwapOpenTimeWindow {
-  'request' : [] | [SetOpenTimeWindowRequest],
-  'swap_canister_id' : [] | [Principal],
-}
-export interface SetVisibility { 'visibility' : [] | [number] }
-export interface SettleCommunityFundParticipation {
-  'result' : [] | [Result_8],
-  'open_sns_token_swap_proposal_id' : [] | [bigint],
-}
-export interface SettleNeuronsFundParticipationRequest {
-  'result' : [] | [Result_9],
-  'nns_proposal_id' : [] | [bigint],
-}
-export interface SettleNeuronsFundParticipationResponse {
-  'result' : [] | [Result_10],
-}
-export interface Spawn {
-  'percentage_to_spawn' : [] | [number],
-  'new_controller' : [] | [Principal],
-  'nonce' : [] | [bigint],
-}
-export interface SpawnResponse { 'created_neuron_id' : [] | [NeuronId] }
-export interface Split { 'amount_e8s' : bigint }
+export interface Split { 'memo' : bigint, 'amount_e8s' : bigint }
+export interface SplitResponse { 'created_neuron_id' : [] | [NeuronId] }
 export interface StakeMaturity { 'percentage_to_stake' : [] | [number] }
 export interface StakeMaturityResponse {
   'maturity_e8s' : bigint,
   'staked_maturity_e8s' : bigint,
 }
-export interface StopOrStartCanister {
-  'action' : [] | [number],
-  'canister_id' : [] | [Principal],
-}
-export interface SwapBackgroundInformation {
-  'ledger_index_canister_summary' : [] | [CanisterSummary],
-  'fallback_controller_principal_ids' : Array<Principal>,
-  'ledger_archive_canister_summaries' : Array<CanisterSummary>,
-  'ledger_canister_summary' : [] | [CanisterSummary],
-  'swap_canister_summary' : [] | [CanisterSummary],
-  'governance_canister_summary' : [] | [CanisterSummary],
-  'root_canister_summary' : [] | [CanisterSummary],
-  'dapp_canister_summaries' : Array<CanisterSummary>,
-}
-export interface SwapDistribution { 'total' : [] | [Tokens] }
-export interface SwapParameters {
-  'minimum_participants' : [] | [bigint],
-  'neurons_fund_participation' : [] | [boolean],
-  'duration' : [] | [Duration],
-  'neuron_basket_construction_parameters' : [] | [
-    NeuronBasketConstructionParameters
-  ],
-  'confirmation_text' : [] | [string],
-  'maximum_participant_icp' : [] | [Tokens],
-  'minimum_icp' : [] | [Tokens],
-  'minimum_direct_participation_icp' : [] | [Tokens],
-  'minimum_participant_icp' : [] | [Tokens],
-  'start_time' : [] | [GlobalTimeOfDay],
-  'maximum_direct_participation_icp' : [] | [Tokens],
-  'maximum_icp' : [] | [Tokens],
-  'neurons_fund_investment_icp' : [] | [Tokens],
-  'restricted_countries' : [] | [Countries],
-}
-export interface SwapParticipationLimits {
-  'min_participant_icp_e8s' : [] | [bigint],
-  'max_participant_icp_e8s' : [] | [bigint],
-  'min_direct_participation_icp_e8s' : [] | [bigint],
-  'max_direct_participation_icp_e8s' : [] | [bigint],
-}
+export interface Subaccount { 'subaccount' : Uint8Array | number[] }
+export interface SwapNeuron { 'id' : [] | [NeuronId], 'status' : number }
 export interface Tally {
   'no' : bigint,
   'yes' : bigint,
   'total' : bigint,
   'timestamp_seconds' : bigint,
 }
-export interface TimeWindow {
-  'start_timestamp_seconds' : bigint,
-  'end_timestamp_seconds' : bigint,
+export interface TargetVersionReset {
+  'human_readable' : [] | [string],
+  'old_target_version' : [] | [Version],
+  'new_target_version' : [] | [Version],
+}
+export interface TargetVersionSet {
+  'old_target_version' : [] | [Version],
+  'new_target_version' : [] | [Version],
+  'is_advanced_automatically' : [] | [boolean],
+}
+export interface Timers {
+  'last_spawned_timestamp_seconds' : [] | [bigint],
+  'last_reset_timestamp_seconds' : [] | [bigint],
+  'requires_periodic_tasks' : [] | [boolean],
 }
 export interface Tokens { 'e8s' : [] | [bigint] }
-export interface UpdateCanisterSettings {
+export type Topic = { 'DappCanisterManagement' : null } |
+  { 'DaoCommunitySettings' : null } |
+  { 'ApplicationBusinessLogic' : null } |
+  { 'CriticalDappOperations' : null } |
+  { 'TreasuryAssetManagement' : null } |
+  { 'Governance' : null } |
+  { 'SnsFrameworkManagement' : null };
+export interface TopicInfo {
+  'native_functions' : [] | [Array<NervousSystemFunction>],
+  'topic' : [] | [Topic],
+  'is_critical' : [] | [boolean],
+  'name' : [] | [string],
+  'description' : [] | [string],
+  'custom_functions' : [] | [Array<NervousSystemFunction>],
+}
+export interface TopicSelector { 'topic' : [] | [Topic] }
+export interface TransferSnsTreasuryFunds {
+  'from_treasury' : number,
+  'to_principal' : [] | [Principal],
+  'to_subaccount' : [] | [Subaccount],
+  'memo' : [] | [bigint],
+  'amount_e8s' : bigint,
+}
+export interface TreasuryMetrics {
+  'name' : [] | [string],
+  'original_amount_e8s' : [] | [bigint],
+  'amount_e8s' : [] | [bigint],
+  'account' : [] | [Account],
+  'ledger_canister_id' : [] | [Principal],
+  'treasury' : number,
+  'timestamp_seconds' : [] | [bigint],
+}
+export interface UpgradeInProgress {
+  'mark_failed_at_seconds' : bigint,
+  'checking_upgrade_lock' : bigint,
+  'proposal_id' : [] | [bigint],
+  'target_version' : [] | [Version],
+}
+export interface UpgradeJournal { 'entries' : Array<UpgradeJournalEntry> }
+export interface UpgradeJournalEntry {
+  'event' : [] | [
+    { 'TargetVersionSet' : TargetVersionSet } |
+      { 'UpgradeStepsReset' : UpgradeStepsReset } |
+      { 'UpgradeOutcome' : UpgradeOutcome } |
+      { 'UpgradeStarted' : UpgradeStarted } |
+      { 'UpgradeStepsRefreshed' : UpgradeStepsRefreshed } |
+      { 'TargetVersionReset' : TargetVersionReset }
+  ],
+  'timestamp_seconds' : [] | [bigint],
+}
+export interface UpgradeOutcome {
+  'status' : [] | [
+    { 'Success' : {} } |
+      { 'Timeout' : {} } |
+      { 'ExternalFailure' : {} } |
+      { 'InvalidState' : { 'version' : [] | [Version] } }
+  ],
+  'human_readable' : [] | [string],
+}
+export interface UpgradeSnsControlledCanister {
+  'new_canister_wasm' : Uint8Array | number[],
+  'mode' : [] | [number],
   'canister_id' : [] | [Principal],
-  'settings' : [] | [CanisterSettings],
+  'chunked_canister_wasm' : [] | [ChunkedCanisterWasm],
+  'canister_upgrade_arg' : [] | [Uint8Array | number[]],
 }
-export interface UpdateNodeProvider {
-  'reward_account' : [] | [AccountIdentifier],
+export interface UpgradeStarted {
+  'current_version' : [] | [Version],
+  'expected_version' : [] | [Version],
+  'reason' : [] | [
+    { 'UpgradeSnsToNextVersionProposal' : ProposalId } |
+      { 'BehindTargetVersion' : {} }
+  ],
 }
-export interface VotingPowerEconomics {
-  'start_reducing_voting_power_after_seconds' : [] | [bigint],
-  'neuron_minimum_dissolve_delay_to_vote_seconds' : [] | [bigint],
-  'clear_following_after_seconds' : [] | [bigint],
+export interface UpgradeStepsRefreshed { 'upgrade_steps' : [] | [Versions] }
+export interface UpgradeStepsReset {
+  'human_readable' : [] | [string],
+  'upgrade_steps' : [] | [Versions],
 }
-export interface VotingRewardParameters {
-  'reward_rate_transition_duration' : [] | [Duration],
-  'initial_reward_rate' : [] | [Percentage],
-  'final_reward_rate' : [] | [Percentage],
+export interface Valuation {
+  'token' : [] | [number],
+  'account' : [] | [Account],
+  'valuation_factors' : [] | [ValuationFactors],
+  'timestamp_seconds' : [] | [bigint],
+}
+export interface ValuationFactors {
+  'xdrs_per_icp' : [] | [Decimal],
+  'icps_per_token' : [] | [Decimal],
+  'tokens' : [] | [Tokens],
+}
+export interface Version {
+  'archive_wasm_hash' : Uint8Array | number[],
+  'root_wasm_hash' : Uint8Array | number[],
+  'swap_wasm_hash' : Uint8Array | number[],
+  'ledger_wasm_hash' : Uint8Array | number[],
+  'governance_wasm_hash' : Uint8Array | number[],
+  'index_wasm_hash' : Uint8Array | number[],
+}
+export interface Versions { 'versions' : Array<Version> }
+export interface VotingPowerMetrics {
+  'governance_total_potential_voting_power' : [] | [bigint],
+  'timestamp_seconds' : [] | [bigint],
+}
+export interface VotingRewardsParameters {
+  'final_reward_rate_basis_points' : [] | [bigint],
+  'initial_reward_rate_basis_points' : [] | [bigint],
+  'reward_rate_transition_duration_seconds' : [] | [bigint],
+  'round_duration_seconds' : [] | [bigint],
 }
 export interface WaitForQuietState {
   'current_deadline_timestamp_seconds' : bigint,
 }
-export interface XdrConversionRate {
-  'xdr_permyriad_per_icp' : [] | [bigint],
-  'timestamp_seconds' : [] | [bigint],
-}
 export interface _SERVICE {
-  'claim_gtc_neurons' : ActorMethod<[Principal, Array<NeuronId>], Result>,
-  'claim_or_refresh_neuron_from_account' : ActorMethod<
-    [ClaimOrRefreshNeuronFromAccount],
-    ClaimOrRefreshNeuronFromAccountResponse
+  'claim_swap_neurons' : ActorMethod<
+    [ClaimSwapNeuronsRequest],
+    ClaimSwapNeuronsResponse
   >,
+  'fail_stuck_upgrade_in_progress' : ActorMethod<[{}], {}>,
   'get_build_metadata' : ActorMethod<[], string>,
-  'get_full_neuron' : ActorMethod<[bigint], Result_2>,
-  'get_full_neuron_by_id_or_subaccount' : ActorMethod<
-    [NeuronIdOrSubaccount],
-    Result_2
-  >,
   'get_latest_reward_event' : ActorMethod<[], RewardEvent>,
-  'get_metrics' : ActorMethod<[], Result_3>,
-  'get_monthly_node_provider_rewards' : ActorMethod<[], Result_4>,
-  'get_most_recent_monthly_node_provider_rewards' : ActorMethod<
+  'get_maturity_modulation' : ActorMethod<[{}], GetMaturityModulationResponse>,
+  'get_metadata' : ActorMethod<[{}], GetMetadataResponse>,
+  'get_metrics' : ActorMethod<[GetMetricsRequest], GetMetricsResponse>,
+  'get_metrics_replicated' : ActorMethod<
+    [GetMetricsRequest],
+    GetMetricsResponse
+  >,
+  'get_mode' : ActorMethod<[{}], GetModeResponse>,
+  'get_nervous_system_parameters' : ActorMethod<
+    [null],
+    NervousSystemParameters
+  >,
+  'get_neuron' : ActorMethod<[GetNeuron], GetNeuronResponse>,
+  'get_proposal' : ActorMethod<[GetProposal], GetProposalResponse>,
+  'get_root_canister_status' : ActorMethod<[null], CanisterStatusResultV2>,
+  'get_running_sns_version' : ActorMethod<[{}], GetRunningSnsVersionResponse>,
+  'get_sns_initialization_parameters' : ActorMethod<
+    [{}],
+    GetSnsInitializationParametersResponse
+  >,
+  'get_timers' : ActorMethod<[{}], GetTimersResponse>,
+  'get_upgrade_journal' : ActorMethod<
+    [GetUpgradeJournalRequest],
+    GetUpgradeJournalResponse
+  >,
+  'list_nervous_system_functions' : ActorMethod<
     [],
-    [] | [MonthlyNodeProviderRewards]
+    ListNervousSystemFunctionsResponse
   >,
-  'get_network_economics_parameters' : ActorMethod<[], NetworkEconomics>,
-  'get_neuron_ids' : ActorMethod<[], BigUint64Array | bigint[]>,
-  'get_neuron_info' : ActorMethod<[bigint], Result_5>,
-  'get_neuron_info_by_id_or_subaccount' : ActorMethod<
-    [NeuronIdOrSubaccount],
-    Result_5
-  >,
-  'get_neurons_fund_audit_info' : ActorMethod<
-    [GetNeuronsFundAuditInfoRequest],
-    GetNeuronsFundAuditInfoResponse
-  >,
-  'get_node_provider_by_caller' : ActorMethod<[null], Result_7>,
-  'get_pending_proposals' : ActorMethod<[], Array<ProposalInfo>>,
-  'get_proposal_info' : ActorMethod<[bigint], [] | [ProposalInfo]>,
-  'get_restore_aging_summary' : ActorMethod<[], RestoreAgingSummary>,
-  'list_known_neurons' : ActorMethod<[], ListKnownNeuronsResponse>,
   'list_neurons' : ActorMethod<[ListNeurons], ListNeuronsResponse>,
-  'list_node_provider_rewards' : ActorMethod<
-    [ListNodeProviderRewardsRequest],
-    ListNodeProviderRewardsResponse
-  >,
-  'list_node_providers' : ActorMethod<[], ListNodeProvidersResponse>,
-  'list_proposals' : ActorMethod<[ListProposalInfo], ListProposalInfoResponse>,
-  'manage_neuron' : ActorMethod<[ManageNeuronRequest], ManageNeuronResponse>,
-  'settle_community_fund_participation' : ActorMethod<
-    [SettleCommunityFundParticipation],
-    Result
-  >,
-  'settle_neurons_fund_participation' : ActorMethod<
-    [SettleNeuronsFundParticipationRequest],
-    SettleNeuronsFundParticipationResponse
-  >,
-  'simulate_manage_neuron' : ActorMethod<
-    [ManageNeuronRequest],
-    ManageNeuronResponse
-  >,
-  'transfer_gtc_neuron' : ActorMethod<[NeuronId, NeuronId], Result>,
-  'update_node_provider' : ActorMethod<[UpdateNodeProvider], Result>,
+  'list_proposals' : ActorMethod<[ListProposals], ListProposalsResponse>,
+  'list_topics' : ActorMethod<[ListTopicsRequest], ListTopicsResponse>,
+  'manage_neuron' : ActorMethod<[ManageNeuron], ManageNeuronResponse>,
+  'reset_timers' : ActorMethod<[{}], {}>,
+  'set_mode' : ActorMethod<[SetMode], {}>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

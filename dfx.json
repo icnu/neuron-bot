@@ -17,7 +17,7 @@
       "type": "rust"
     },
     "governance": {
-      "candid": "https://raw.githubusercontent.com/dfinity/ic/refs/heads/master/rs/nns/governance/canister/governance.did",
+      "candid": "https://raw.githubusercontent.com/dfinity/ic/fccfa2c7c7cba9e5485ad0b48823990e24a67f40/rs/sns/governance/canister/governance.did",
       "type": "custom",
       "wasm": "",
       "remote": {
