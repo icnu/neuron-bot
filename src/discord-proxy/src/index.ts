@@ -1,8 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import fastifyCors from '@fastify/cors'
-import { ChatInputCommandInteraction, Client, Events, InteractionType } from 'discord.js';
+import { Client, Events } from 'discord.js';
 import dotenv from 'dotenv';
-import { Token } from './token';
 import { handlerCommandInteraction, registerCommands } from './commands';
 
 dotenv.config({ path: '../../.env' });

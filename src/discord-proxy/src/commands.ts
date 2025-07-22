@@ -14,25 +14,25 @@ export type RegisterButton = {
     handler: ButtonHandlerType
 }
 
-let Commands: RegisterSlashCommand[] = [
+let _commands: RegisterSlashCommand[] = [
     ...Token.commands
 ];
-let Buttons: RegisterButton[] = [
+let _buttons: RegisterButton[] = [
     ...Token.buttons
 ];
-let CommandNameToHandlerIndex = new Map<string, CommandHandlerType>();
-let ButtonNameToHandlerIndex = new Map<string, ButtonHandlerType>();
+let _commandNameToHandlerIndex = new Map<string, CommandHandlerType>();
+let _buttonNameToHandlerIndex = new Map<string, ButtonHandlerType>();
 
 export async function registerCommands(client: Client) {
-    Commands.forEach(command => {
-        CommandNameToHandlerIndex.set(command.command.name, command.handler);
+    _commands.forEach(command => {
+        _commandNameToHandlerIndex.set(command.command.name, command.handler);
     });
 
-    Buttons.forEach(button => {
-        ButtonNameToHandlerIndex.set(button.id, button.handler);
+    _buttons.forEach(button => {
+        _buttonNameToHandlerIndex.set(button.id, button.handler);
     })
 
-    const promises = Commands.map(async command => {
+    const promises = _commands.map(async command => {
         await client.application?.commands.create(command.command.toJSON());
     });
 
@@ -41,10 +41,10 @@ export async function registerCommands(client: Client) {
 
 export async function handlerCommandInteraction(interaction: Interaction) {
     if ( interaction.isChatInputCommand() ) {
-        const handler = CommandNameToHandlerIndex.get(interaction.commandName);
+        const handler = _commandNameToHandlerIndex.get(interaction.commandName);
         if ( handler ) await handler(interaction);
     } else if ( interaction.isButton() ) {
-        const handler = ButtonNameToHandlerIndex.get(interaction.customId);
+        const handler = _buttonNameToHandlerIndex.get(interaction.customId);
         if ( handler ) await handler(interaction);
     }
 }
