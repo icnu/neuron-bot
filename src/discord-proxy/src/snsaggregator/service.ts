@@ -21,12 +21,12 @@ export class SnsAggregatorServiceClass {
         console.log(`Fetched ${data.length} SNSes data successfully`);
 
         data.map(d => {
-            this._metadataStore.set(d.name, d);
+            this._metadataStore.set(d.name.toLowerCase(), d);
         });
     }
 
     resolveSnsByName(name: string): SnsMetadata | undefined {
-        return this._metadataStore.get(name);
+        return this._metadataStore.get(name.toLowerCase());
     }
 
     private async _fetchSNSMetadata(page: number = 0): Promise<SnsMetadata[]>  {
