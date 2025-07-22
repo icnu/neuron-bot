@@ -1,6 +1,6 @@
 import { Principal } from "@dfinity/principal";
 import { get_encrypted_maps } from "../encrypted_maps";
-import { Snowflake } from "discord.js";
+import { Snowflake, User } from "discord.js";
 
 export type UserData = {
     private_key_data: string,
@@ -20,6 +20,19 @@ export class UserStoreClass {
             new TextEncoder().encode(user_data.discord_id),
             new TextEncoder().encode(JSON.stringify(user_data))
         );
+    }
+
+    async get(discord_id: Snowflake): Promise<UserData | undefined> {
+        const rawValue = await get_encrypted_maps().getValue(
+            _mapOwner,
+            _mapName,
+            new TextEncoder().encode(discord_id),
+        );
+        if ( rawValue.length == 0 ) return;
+
+        const decodedValue = new TextDecoder().decode(rawValue);
+        const parsedValue = JSON.parse(decodedValue) as UserData;
+        return parsedValue;
     }
 
     async users(): Promise<UserData[]> {
