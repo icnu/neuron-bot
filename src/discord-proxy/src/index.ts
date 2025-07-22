@@ -1,22 +1,22 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import fastifyCors from '@fastify/cors'
-import { Client, Events } from 'discord.js';
+import { ChatInputCommandInteraction, Client, Events, InteractionType } from 'discord.js';
 import dotenv from 'dotenv';
 import { Token } from './token';
+import { handlerCommandInteraction, registerCommands } from './commands';
 
 dotenv.config({ path: '../../.env' });
 
 async function initDiscord(): Promise<Client> {
   const client = new Client({ intents: [] });
 
-  client.on(Events.ClientReady, readyClient => {
+  client.on(Events.ClientReady, async readyClient => {
+    await registerCommands(client);
     console.log(`Logged in as ${readyClient.user.tag}!`);
-
-    Token.initDiscord(client);
   });
 
   client.on(Events.InteractionCreate, async interaction => {
-    Token.interactionHandlerDiscord(client, interaction);
+    handlerCommandInteraction(interaction)
   });
 
   await client.login(process.env.DISCORD_BOT_TOKEN!);

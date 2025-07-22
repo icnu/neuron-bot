@@ -1,6 +1,7 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, Interaction, MessageFlags } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, Interaction, MessageFlags, SlashCommandBuilder } from "discord.js";
+import { RegisterButton, RegisterSlashCommand } from "../commands";
 
-async function neuronAuthenticateMessageHandler(client: Client, interaction: ChatInputCommandInteraction) {
+async function neuronAuthenticateMessageHandler(interaction: ChatInputCommandInteraction) {
     const embed = new EmbedBuilder()
         .setTitle("Login Screen")
         .setColor('Aqua')
@@ -21,7 +22,7 @@ async function neuronAuthenticateMessageHandler(client: Client, interaction: Cha
     });
 }
 
-async function neuronTokenLoginHandler(client: Client, interaction: ButtonInteraction) {
+async function neuronTokenLoginHandler(interaction: ButtonInteraction) {
     const embed = new EmbedBuilder()
         .setTitle("Complete Login")
         .setColor('Aqua')
@@ -43,28 +44,23 @@ async function neuronTokenLoginHandler(client: Client, interaction: ButtonIntera
     });
 }
 
-async function initDiscord(client: Client) {
-    await client.application?.commands.create({
-        name: 'authenticate_message',
-        description: 'pongs you'
-    });
-}
-
-async function interactionHandlerDiscord(client: Client, interaction: Interaction) {
-    if (interaction.isChatInputCommand()) {
-        switch (interaction.commandName) {
-            case 'authenticate_message':
-                neuronAuthenticateMessageHandler(client, interaction);
-        }
-    } else if (interaction.isButton()) {
-        switch (interaction.customId) {
-            case 'neuron_token_login':
-                neuronTokenLoginHandler(client, interaction);
-        }
+const commands: RegisterSlashCommand[] = [
+    {
+        command: new SlashCommandBuilder()
+            .setName('display_login_message')
+            .setDescription('Shows Login Message for users'),
+        handler: neuronAuthenticateMessageHandler
     }
-}
+];
+
+const buttons: RegisterButton[] = [
+    {
+        id: 'neuron_token_login',
+        handler: neuronTokenLoginHandler
+    }
+];
 
 export default {
-    initDiscord,
-    interactionHandlerDiscord
+    commands,
+    buttons
 }
