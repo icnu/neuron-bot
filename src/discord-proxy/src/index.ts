@@ -16,7 +16,7 @@ async function initDiscord(): Promise<Client> {
   });
 
   client.on(Events.InteractionCreate, async interaction => {
-    handlerCommandInteraction(interaction)
+    await handlerCommandInteraction(interaction)
   });
 
   await client.login(process.env.DISCORD_BOT_TOKEN!);
