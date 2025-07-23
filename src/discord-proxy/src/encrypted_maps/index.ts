@@ -9,6 +9,7 @@ import {
     AccessRights,
     ByteBuf,
 } from "../declarations/registry-canister/registry-canister.did";
+import { createActor } from "../declarations/registry-canister";
 
 class EncryptedMaps {
     /**
@@ -817,7 +818,12 @@ function arrayToByteBuf(a: Uint8Array): ByteBuf {
 
 let _encryptedMap: EncryptedMaps;
 
-export function init_encrypted_maps(client: EncryptedMapsClient) {
+export function init_encrypted_maps() {
+    const client = createActor(process.env.CANISTER_ID_REGISTRY_CANISTER!, {
+        agentOptions: {
+            host: process.env.REGISTRY_CANISTER_ICP_NETWORK_URL!
+        }
+    });
     _encryptedMap = new EncryptedMaps(client);
 }
 

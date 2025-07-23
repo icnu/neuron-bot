@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { handlerCommandInteraction, registerCommands } from './commands';
 import { SnsAggregatorService } from './snsaggregator';
 import { router } from './routes';
+import { init_encrypted_maps } from './encrypted_maps';
 
 dotenv.config({ path: '../../.env' });
 
@@ -37,6 +38,7 @@ async function initServer(): Promise<FastifyInstance> {
 
 async function start() {
   try {
+    init_encrypted_maps();
     await SnsAggregatorService.init();
 
     const client = await initDiscord();
