@@ -16,19 +16,6 @@
       "package": "registry-canister",
       "type": "rust"
     },
-    "governance": {
-      "candid": "https://raw.githubusercontent.com/dfinity/ic/fccfa2c7c7cba9e5485ad0b48823990e24a67f40/rs/sns/governance/canister/governance.did",
-      "type": "custom",
-      "wasm": "",
-      "remote": {
-        "id": {
-          "ic": "aaaaa-aa"
-        }
-      },
-      "declarations": {
-        "output": "src/discord-proxy/src/governance/bindings"
-      }
-    },
     "frontend": {
       "dependencies": [
         "registry-canister"

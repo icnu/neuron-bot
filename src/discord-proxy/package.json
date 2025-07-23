@@ -19,6 +19,7 @@
     "@dfinity/candid": "^2.3.0",
     "@dfinity/identity": "^2.3.0",
     "@dfinity/principal": "^2.3.0",
+    "@dfinity/sns": "^3.7.1",
     "@dfinity/vetkeys": "^0.3.0",
     "@fastify/cors": "^11.0.1",
     "@noble/curves": "^1.9.4",
