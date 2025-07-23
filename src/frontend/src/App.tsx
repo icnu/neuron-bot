@@ -5,30 +5,33 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Copy, Check } from "lucide-react"
 import { useEffect, useState } from "react";
 import { AuthClient } from "@dfinity/auth-client";
+import { getStorage, saveIdentity } from "./lib/identity";
 
 export default function Component() {
-  const [isConnected, setIsConnected] = useState(true)
-  const principalAddress = "rdmx6-jaaaa-aaaah-qcaiq-cai"
   const [copied, setCopied] = useState(false)
-
   const [state, setState] = useState<{ authClient: AuthClient | undefined, isAuthenticated: boolean }>({
     authClient: undefined,
     isAuthenticated: false,
   });
 
-  // Initialize auth client
+  const principalAddress: string | undefined = state.authClient?.getIdentity()?.getPrincipal()?.toText();
+  const isConnected: boolean = state.isAuthenticated && !!principalAddress;
+
   useEffect(() => {
     updateActor();
   }, []);
 
   const updateActor = async () => {
-    console.log(await (await fetch('http://localhost:3000/ping')).json());
     const authClient = await AuthClient.create({
-      keyType: "Ed25519"
+      keyType: "Ed25519",
+      storage: getStorage(),
+
     });
-    const identity = authClient.getIdentity();
-    console.log("Identity: ", identity);
+
     const isAuthenticated = await authClient.isAuthenticated();
+    if ( isAuthenticated ) {
+      await saveIdentity(authClient);
+    }
 
     setState((prev) => ({
       ...prev,
@@ -39,24 +42,15 @@ export default function Component() {
 
   const login = async () => {
     await state.authClient?.login({
-      identityProvider: "http://vg3po-ix777-77774-qaafa-cai.localhost:4943/",
-      onSuccess: updateActor
+      identityProvider: "https://identity.ic0.app/",
+      onSuccess: updateActor,
+      maxTimeToLive: BigInt(30) * BigInt(24) * BigInt(3_600) * BigInt(1_000_000_000), // 30 days
     });
   };
 
-  const logout = async () => {
-    await state.authClient?.logout();
-    updateActor();
-  };
-
-  const connectToInternetIdentity = () => {
-    // Replace with actual Internet Identity connection logic
-    setIsConnected(true)
-  }
-
   const copyPrincipalAddress = async () => {
     try {
-      await navigator.clipboard.writeText(principalAddress)
+      await navigator.clipboard.writeText(principalAddress!)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
@@ -88,7 +82,7 @@ export default function Component() {
                   <span className="text-sm font-medium text-green-800">Connected</span>
                 </div>
               ) : (
-                <Button onClick={connectToInternetIdentity}>Connect to Internet Identity</Button>
+                <Button onClick={login}>Connect to Internet Identity</Button>
               )}
             </div>
           </div>
@@ -105,7 +99,7 @@ export default function Component() {
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
               Connect your Internet Identity to manage your DAO access and configure neurons for the Discord bot.
             </p>
-            <Button size="lg" onClick={connectToInternetIdentity}>
+            <Button size="lg" onClick={login}>
               Connect to Internet Identity
             </Button>
           </div>
