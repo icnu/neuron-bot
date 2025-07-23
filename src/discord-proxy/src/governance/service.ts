@@ -1,6 +1,7 @@
 import { Principal } from "@dfinity/principal";
 import { HttpAgent, Identity } from "@dfinity/agent";
 import { SnsGovernanceCanister, SnsNeuron, SnsNeuronId, SnsProposalData, SnsProposalId } from "@dfinity/sns";
+import { ulid } from "ulid";
 
 export class GovernanceServiceClass {
     async listLastProposal(canisterId: string): Promise<SnsProposalData> {
@@ -43,4 +44,30 @@ export class GovernanceServiceClass {
     }
 }
 
+export type VoteSession = {
+    proposalId: SnsProposalId,
+    canisterId: string,
+    neuron?: string,
+    identity?: Identity
+};
+
+export class VoteSessionServiceClass {
+    private _voteSessions: Map<string, VoteSession>;
+
+    constructor() {
+        this._voteSessions = new Map();
+    }
+
+    createVoteSession(data: VoteSession): string {
+        const sessionId = ulid();
+        this._voteSessions.set(sessionId, data);
+        return sessionId;
+    }
+
+    resolveVoteSession(id: string): VoteSession | undefined {
+        return this._voteSessions.get(id);
+    }
+}
+
 export const GovernanceService = new GovernanceServiceClass();
+export const VoteSessionService = new VoteSessionServiceClass();
