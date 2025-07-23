@@ -4,6 +4,7 @@ import { SnsAggregatorService } from "../snsaggregator";
 import { GovernanceService, VoteSession, VoteSessionService } from "./service";
 import { UserService } from "../user";
 import { displayFormatHexString, e8sToUnits, fromHexString, toHexString } from "../utils";
+import { SnsVote } from "@dfinity/sns";
 
 async function demoPrintProposalHandler(interaction: ChatInputCommandInteraction) {
     const snsName = interaction.options.getString('sns', true);
@@ -151,7 +152,7 @@ async function voteHandler(interaction: ButtonInteraction) {
         voteSession.identity!,
         { id: fromHexString(voteSession.neuron!) },
         voteSession.proposalId,
-        (voteSide == 'accept' ? 1 : -1)
+        (voteSide == 'accept' ? SnsVote.Yes : SnsVote.No)
     );
 
     await interaction.editReply({
