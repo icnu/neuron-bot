@@ -16,6 +16,7 @@ export default function Component() {
 
   const principalAddress: string | undefined = state.authClient?.getIdentity()?.getPrincipal()?.toText();
   const isConnected: boolean = state.isAuthenticated && !!principalAddress;
+  console.log(principalAddress, isConnected);
 
   useEffect(() => {
     updateActor();
@@ -25,7 +26,6 @@ export default function Component() {
     const authClient = await AuthClient.create({
       keyType: "Ed25519",
       storage: getStorage(),
-
     });
 
     const isAuthenticated = await authClient.isAuthenticated();

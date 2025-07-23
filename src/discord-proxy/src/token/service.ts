@@ -1,13 +1,13 @@
 import { Snowflake } from "discord.js";
-import { v7 } from "uuid";
 import { TokenStore } from "./store";
+import { ulid } from "ulid";
 
 export class TokenServiceClass {
     async get_token_for_user(discord_id: Snowflake): Promise<string> {
-        const uuid = v7();
-        await TokenStore.store({ discord_id, token_id: uuid });
+        const token_id = ulid();
+        await TokenStore.store({ discord_id, token_id });
 
-        return uuid;
+        return token_id;
     }
 
     async get_user_from_token(token: string): Promise<Snowflake> {

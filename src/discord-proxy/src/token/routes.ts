@@ -24,6 +24,7 @@ async function neuronAuthenticateMessageHandler(interaction: ChatInputCommandInt
 }
 
 async function neuronTokenLoginHandler(interaction: ButtonInteraction) {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     const token = await TokenService.get_token_for_user(interaction.user.id);
 
     const embed = new EmbedBuilder()
@@ -40,10 +41,9 @@ async function neuronTokenLoginHandler(interaction: ButtonInteraction) {
     
     const row = new ActionRowBuilder().addComponents(button).toJSON();
     
-    interaction.reply({
+    await interaction.editReply({
         embeds: [embed],
-        components: [row],
-        flags: MessageFlags.Ephemeral
+        components: [row]
     });
 }
 
