@@ -2,13 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Copy, Check } from "lucide-react"
+import { Shield, Copy, Check, Loader2 } from "lucide-react"
 import { useEffect, useState } from "react";
 import { AuthClient } from "@dfinity/auth-client";
 import { getStorage, saveIdentity } from "./lib/identity";
 
 export default function Component() {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false)
   const [state, setState] = useState<{ authClient: AuthClient | undefined, isAuthenticated: boolean }>({
     authClient: undefined,
     isAuthenticated: false,
@@ -19,8 +20,13 @@ export default function Component() {
   console.log(principalAddress, isConnected);
 
   useEffect(() => {
-    updateActor();
+    triggerUpdateActor();
   }, []);
+
+  const triggerUpdateActor = () => {
+    setIsConnecting(true);
+    updateActor();
+  }
 
   const updateActor = async () => {
     const authClient = await AuthClient.create({
@@ -33,6 +39,7 @@ export default function Component() {
       await saveIdentity(authClient);
     }
 
+    setIsConnecting(false);
     setState((prev) => ({
       ...prev,
       authClient,
@@ -43,7 +50,7 @@ export default function Component() {
   const login = async () => {
     await state.authClient?.login({
       identityProvider: "https://identity.ic0.app/",
-      onSuccess: updateActor,
+      onSuccess: triggerUpdateActor,
       maxTimeToLive: BigInt(30) * BigInt(24) * BigInt(3_600) * BigInt(1_000_000_000), // 30 days
     });
   };
@@ -82,7 +89,10 @@ export default function Component() {
                   <span className="text-sm font-medium text-green-800">Connected</span>
                 </div>
               ) : (
-                <Button onClick={login}>Connect to Internet Identity</Button>
+                <Button onClick={login} disabled={isConnecting}>
+                  {isConnecting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {isConnecting ? "Connecting..." : "Connect to Internet Identity"}
+                </Button>
               )}
             </div>
           </div>
@@ -99,8 +109,9 @@ export default function Component() {
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
               Connect your Internet Identity to manage your DAO access and configure neurons for the Discord bot.
             </p>
-            <Button size="lg" onClick={login}>
-              Connect to Internet Identity
+            <Button size="lg" onClick={login} disabled={isConnecting}>
+              {isConnecting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {isConnecting ? "Connecting..." : "Connect to Internet Identity"}
             </Button>
           </div>
         ) : (
