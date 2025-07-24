@@ -3,7 +3,7 @@ import { RegisterButton, RegisterSlashCommand, RegisterStringSelect } from "../c
 import { SnsAggregatorService } from "../snsaggregator";
 import { GovernanceService, VoteSession, VoteSessionService } from "./service";
 import { UserService } from "../user";
-import { displayFormatHexString, e8sToUnits, fromHexString, toHexString } from "../utils";
+import { displayFormatHexString, e8sToUnits, fromHexString, generateProgressBar, toHexString } from "../utils";
 import { SnsVote } from "@dfinity/sns";
 
 async function demoPrintProposalHandler(interaction: ChatInputCommandInteraction) {
@@ -26,6 +26,9 @@ async function demoPrintProposalHandler(interaction: ChatInputCommandInteraction
 
             🟩🟩🟩🟩🟩           43.20%
             🟥🟥🟥              21.35%
+
+            ${generateProgressBar(0, 43, 20)} 43.20%
+            ${generateProgressBar(1, 21, 20)} 21.35%
         `);
 
     const voteSession: VoteSession = {

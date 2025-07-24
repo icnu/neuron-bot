@@ -1,3 +1,5 @@
+export * from './progress';
+
 export function toHexString(input: Uint8Array | number[] ): string {
   const uint8Array = input instanceof Uint8Array
     ? input : new Uint8Array(input);

@@ -1,11 +1,12 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import fastifyCors from '@fastify/cors'
-import { Client, Events } from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
 import { handlerCommandInteraction, registerCommands } from './commands';
 import { SnsAggregatorService } from './snsaggregator';
 import { router } from './routes';
 import { init_encrypted_maps } from './encrypted_maps';
+import { registerProgressBarEmojis } from './utils';
 
 dotenv.config({ path: '../../.env' });
 
@@ -14,6 +15,7 @@ async function initDiscord(): Promise<Client> {
 
   client.on(Events.ClientReady, async readyClient => {
     await registerCommands(client);
+    await registerProgressBarEmojis(readyClient);
     console.log(`Logged in as ${readyClient.user.tag}!`);
   });
 
