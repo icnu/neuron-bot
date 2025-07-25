@@ -1,5 +1,8 @@
 {
   "frontend": {
     "ic": "bv6mc-zqaaa-aaaam-aenqa-cai"
+  },
+  "registry-canister": {
+    "ic": "bs7kw-uiaaa-aaaam-aenqq-cai"
   }
 }
