@@ -1,3 +1,7 @@
+/**
+ * Source: https://github.com/dfinity/vetkeys/blob/115b8a1ac54e3029981180723d6f90945b35648e/backend/rs/canisters/ic_vetkeys_encrypted_maps_canister/src/lib.rs
+ */
+
 use std::cell::RefCell;
 
 use candid::Principal;
