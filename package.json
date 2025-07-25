@@ -6,8 +6,8 @@
   "name": "sns-discord-bot",
   "scripts": {
     "setup": "cd src/frontend && pnpm i && cd ../discord-proxy && pnpm i",
-    "deploy": "cd src/frontend && npm run build && cd ../.. && dfx deploy && dfx generate && cp src/declarations src/discord-proxy/src/",
-    "start:proxy": "cd src/discord-proxy && npx tsx ./src/index.ts"
+    "deploy": "source ./.env && cd src/frontend && npm run build && cd ../.. && dfx deploy && dfx generate && cp src/declarations src/discord-proxy/src/",
+    "start:proxy": "source ./.env && cd src/discord-proxy && npx tsx ./src/index.ts"
   },
   "type": "module",
   "workspaces": [
