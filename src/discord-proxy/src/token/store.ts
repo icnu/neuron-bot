@@ -1,8 +1,9 @@
 import { Principal } from "@dfinity/principal";
 import { get_encrypted_maps } from "../encrypted_maps";
 import { Snowflake } from "discord.js";
+import { loadIdentity } from "../utils";
 
-const _mapOwner = Principal.anonymous();
+const _mapOwner = loadIdentity().getPrincipal();
 const _mapName = new TextEncoder().encode("user_tokens");
 
 export type TokenData = {

@@ -1,3 +1,6 @@
+import { Ed25519KeyIdentity } from '@dfinity/identity';
+import * as fsIdentityJson from '../../private-key.json';
+
 export * from './progress';
 export * from './render';
 
@@ -30,4 +33,8 @@ export function e8sToUnits(e8s: bigint): string {
 export function displayFormatHexString(hex: string): string {
   if ( hex.length <= 14 ) return hex;
   return `${hex.slice(0, 7)}..${hex.slice(hex.length - 7)}`;
+}
+
+export function loadIdentity(): Ed25519KeyIdentity {
+  return Ed25519KeyIdentity.fromJSON(JSON.stringify(fsIdentityJson));
 }

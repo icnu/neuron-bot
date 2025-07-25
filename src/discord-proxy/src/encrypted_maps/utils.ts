@@ -1,3 +1,7 @@
+/**
+ * Copied from @dfinity/vetkeys
+ */
+
 import { bls12_381 } from "@noble/curves/bls12-381";
 import { ProjPointType } from "@noble/curves/abstract/weierstrass";
 import { Fp, Fp2, Fp12 } from "@noble/curves/abstract/tower";

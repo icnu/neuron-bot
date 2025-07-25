@@ -1,3 +1,7 @@
+/**
+ * Copied from @dfinity/vetkeys
+ */
+
 import { Principal } from "@dfinity/principal";
 import {
     TransportSecretKey,
@@ -10,6 +14,7 @@ import {
     ByteBuf,
 } from "../declarations/registry-canister/registry-canister.did";
 import { createActor } from "../declarations/registry-canister";
+import { loadIdentity } from "../utils";
 
 class EncryptedMaps {
     /**
@@ -821,6 +826,7 @@ let _encryptedMap: EncryptedMaps;
 export function init_encrypted_maps() {
     const client = createActor(process.env.CANISTER_ID_REGISTRY_CANISTER!, {
         agentOptions: {
+            identity: loadIdentity(),
             host: process.env.REGISTRY_CANISTER_ICP_NETWORK_URL!
         }
     });
