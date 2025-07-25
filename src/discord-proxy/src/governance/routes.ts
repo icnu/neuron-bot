@@ -3,7 +3,7 @@ import { RegisterButton, RegisterSlashCommand, RegisterStringSelect } from "../c
 import { SnsAggregatorService } from "../snsaggregator";
 import { GovernanceService, VoteSession, VoteSessionService } from "./service";
 import { UserService } from "../user";
-import { displayFormatHexString, e8sToUnits, fromHexString, generateProgressBar, toHexString } from "../utils";
+import { displayFormatHexString, e8sToUnits, fromHexString, generateProgressBar, renderProposal, toHexString } from "../utils";
 import { SnsVote } from "@dfinity/sns";
 
 async function demoPrintProposalHandler(interaction: ChatInputCommandInteraction) {
@@ -18,37 +18,13 @@ async function demoPrintProposalHandler(interaction: ChatInputCommandInteraction
 
     await interaction.deferReply();
     const proposal = await GovernanceService.listLastProposal(sns.governance_canister_id);
-    const embed = new EmbedBuilder()
-        .setTitle('Motion')
-        .setDescription(`
-            ## ${proposal.proposal[0]?.title ?? ""}
-            ${proposal.proposal[0]?.summary.replace('<br>', '\n') ?? ""}
-
-            🟩🟩🟩🟩🟩           43.20%
-            🟥🟥🟥              21.35%
-
-            ${generateProgressBar(0, 43, 20)} 43.20%
-            ${generateProgressBar(1, 21, 20)} 21.35%
-        `);
-
     const voteSession: VoteSession = {
         proposalId: proposal.id[0]!,
         canisterId: sns.governance_canister_id
     };
-
     const voteSessionId = await VoteSessionService.createVoteSession(voteSession);
 
-    const button = new ButtonBuilder()
-        .setCustomId(`list_neurons:${voteSessionId}`)
-        .setLabel('Vote')
-        .setStyle(ButtonStyle.Primary);
-    
-    const row = new ActionRowBuilder().addComponents(button).toJSON();
-    
-    await interaction.editReply({
-        embeds: [embed],
-        components: [row]
-    })
+    await interaction.editReply(renderProposal(proposal, `list_neurons:${voteSessionId}`, sns.root_canister_id))
 }
 
 async function listNeuronsHandler(interaction: ButtonInteraction) {

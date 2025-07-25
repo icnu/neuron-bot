@@ -7,6 +7,7 @@ export type SnsMetadata = {
     name: string,
     logo: string,
     governance_canister_id: string,
+    root_canister_id: string,
 };
 
 export class SnsAggregatorServiceClass {
@@ -45,7 +46,8 @@ export class SnsAggregatorServiceClass {
         const filteredMetadata: SnsMetadata[] = data.map((d: any) => ({
             name: d.meta.name,
             logo: d.meta.logo,
-            governance_canister_id: d.canister_ids.governance_canister_id
+            governance_canister_id: d.canister_ids.governance_canister_id,
+            root_canister_id: d.canister_ids.root_canister_id,
         }));
 
         if (data.length === AGGREGATOR_PAGE_SIZE) {

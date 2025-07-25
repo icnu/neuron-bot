@@ -21,6 +21,10 @@ const _emojiMetadata: ApplicationEmojiCreateOptions[] = [
 
 const _emojis: Emoji[] = [];
 
+export function displayEmptyEmoji(): string {
+    return _emojis[3].toString();
+}
+
 export async function registerProgressBarEmojis(client: Client<true>) {
     const emojis = await client.application.emojis.fetch();
 
