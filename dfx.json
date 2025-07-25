@@ -17,9 +17,6 @@
       "type": "rust"
     },
     "frontend": {
-      "dependencies": [
-        "registry-canister"
-      ],
       "source": [
         "src/frontend/dist"
       ],

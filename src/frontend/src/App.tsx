@@ -76,7 +76,7 @@ export default function Component() {
                 <Shield className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">DAO Access Bot</h1>
+                <h1 className="text-xl font-semibold text-gray-900">Neuron Bot</h1>
                 <p className="text-sm text-gray-500">ICP Network</p>
               </div>
             </div>

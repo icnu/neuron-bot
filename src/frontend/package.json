@@ -6,7 +6,7 @@
   "scripts": {
     "setup": "dfx canister create registry-canister && dfx generate registry-canister && dfx deploy",
     "start": "vite --port 3000",
-    "prebuild": "dfx generate",
+    "prebuild": "",
     "build": "tsc && vite build",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\""
   },
