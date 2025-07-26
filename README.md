@@ -28,6 +28,16 @@ The project uses the following external components:
 - **SNS Aggregator:** For up-to-date SNS data
 - **Internet Identity:** For authentication
 
+### Technical Workflow
+
+- User clicks the "Login" button on Discord.
+- The interaction is received by `Proxy Agent`, which send a ephemeral response with a unique login link.
+- The link takes the user to a login page through the `Frontend` canister.
+- User logins through Internet Identity.
+- Private Key of the ephemeral II principal and delegation information, gets encrypted and stored in the `Registry` canister
+- Whenever user tries to interact with proposals, `Proxy Agent` undergoes handshake for TEE verification with `Registry` canister.
+- It then gets the corresponding II data and carries the interaction on behalf of the user.
+
 ## Security
 
 The ephemeral Internet Identity principal, it's private keys and the delegation data are all encrypted and stored in the Registry Canister using VetKeys on ICP. The `Registry Canister` grants access to the keys, only to the `Proxy Agent` by verifying the Nitro TEE Attestations, and matching the running image hash to the last release. This ensures the sensitive data is not exposed in any way.
