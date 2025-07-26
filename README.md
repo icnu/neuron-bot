@@ -6,6 +6,8 @@ Voting on SNS proposals, Stake-aware Access Controls, Enhanced Community Collabo
 
 This project enables seamless, secure, and privacy-conscious voting on Internet Computer’s SNS (Service Nervous System) proposals directly within Discord. It leverages Internet Identity, VetKeys and TEEs to make the entire user-flow completely secure. Designed with extensibility in mind, the system also lays the foundation for advanced community features such as stake-aware access control and enhanced governance workflows — turning Discord into a robust platform for decentralized decision-making and engagement.
 
+[Demo Video](https://youtu.be/lQ2AFV7X6i0) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
+
 ## How does it work?
 
 - Login through Internet Identity.
