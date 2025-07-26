@@ -14,6 +14,13 @@ This project enables seamless, secure, and privacy-conscious voting on Internet 
 - Add the ephemeral principal as a Hot Key for your neurons.
 - And you're done!
 
+## Commands Supported
+
+- `/display_login_message`: Displays a message with a button for users to Authenticate themselves
+- `/print_proposal sns=`: Lets you print the last proposal of any SNS by name (used for demo)
+
+_More commands to be added as we go on with the project_
+
 ## Architecture
 
 <img width="1758" height="1180" alt="image" src="https://github.com/user-attachments/assets/386f2a72-8513-4463-8e29-f36ff322853a" />
@@ -84,7 +91,7 @@ npm run start:proxy
 
 Neural is a larger project that aims to reimagine Decentralized Governance for everyone. In chains outside ICP ecosystem like Ethereum, Solana, Aptos, because of the high gas costs and slow transactions, the DAO ecosystem is mostly on centralized voting and governance apps. This creates a paradox where DAOs that came with the promise of decentralization are themselves centralized.
 
-The vision of Neural is to use ICP to provide a chain-agnostic DAO Governance Layer, that is not gas-heavy yet on-chain and auditable, and close to where the people actually are - Discord, Telegram and Discourse Forums. Thus, making ICP as the de-facto solution for DAO Tooling.
+The vision of Neural is to use ICP to provide a chain-agnostic DAO Governance Layer, that is not gas-heavy yet on-chain and auditable, and close to where the people actually are - Discord, Telegram and Discourse Forums. With Neural, every DAO across all chains can become truly on-chain just at a fraction of the current cost of providers. This will make ICP the heart of DAOs, in-turn entire Web3 ecosystem.
 
 ## Roadmap
 ### Neuron Bot - Governance where the people are
