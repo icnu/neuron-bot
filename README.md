@@ -1,5 +1,25 @@
-# SNS Discord Integration
+# Neuron Bot
 
+_This project is a part of series of projects, **Neural** for WCHL 2025, meant to make the ICP DAO capabilities accessible to organizations outside ICP. The goal is to establish ICP as the ultimate DAO platform for any needs._
+
+Voting on SNS proposals, Stake-aware Access Controls, Enhanced Community Collaboration, all through Discord now!
+
+
+## Architecture
+
+<img width="1758" height="1180" alt="image" src="https://github.com/user-attachments/assets/386f2a72-8513-4463-8e29-f36ff322853a" />
+
+
+The project has 3 components:
+- **Registry Canister:** This canister is a clone of the Encrypted Maps canister. It stores the encrypted User Identity data, and verifies the TEE Attestations through a handshake process for access to encrypted values.
+- **Proxy Agent:** The off-chain component responsible for establishing websocket communication with Discord servers. Also securely handles the storage of user identity. It runs in a Nitro TEE Enclave for trust.
+- **Frontend Canister**
+
+_Note: TEEs have been avoided for this hackathon project because of the high costs. In production, we'll use OracleKit's [nitro-tee-kit](https://github.com/OracleKit/nitro-tee-kit) and [nitro-tee-attestation](https://github.com/OracleKit/nitro-tee-attestation)_
+
+The project uses the following external components:
+- **SNS Aggregator:** For up-to-date SNS data
+- **Internet Identity:** For authentication
 
 ## Deployed Canisters
 - Frontend Canister: [bv6mc-zqaaa-aaaam-aenqa-cai](https://dashboard.internetcomputer.org/canister/bv6mc-zqaaa-aaaam-aenqa-cai)
