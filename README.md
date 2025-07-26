@@ -4,6 +4,13 @@ _This project is a part of series of projects, **Neural** for WCHL 2025, meant t
 
 Voting on SNS proposals, Stake-aware Access Controls, Enhanced Community Collaboration, all through Discord now!
 
+This project enables seamless, secure, and privacy-conscious voting on Internet Computer’s SNS (Service Nervous System) proposals directly within Discord. It leverages Internet Identity, VetKeys and TEEs to make the entire user-flow completely secure. Designed with extensibility in mind, the system also lays the foundation for advanced community features such as stake-aware access control and enhanced governance workflows — turning Discord into a robust platform for decentralized decision-making and engagement.
+
+## How does it work?
+
+- Login through Internet Identity.
+- Add the ephemeral principal as a Hot Key for your neurons.
+- And you're done!
 
 ## Architecture
 
@@ -20,6 +27,10 @@ _Note: TEEs have been avoided for this hackathon project because of the high cos
 The project uses the following external components:
 - **SNS Aggregator:** For up-to-date SNS data
 - **Internet Identity:** For authentication
+
+## Security
+
+The ephemeral Internet Identity principal, it's private keys and the delegation data are all encrypted and stored in the Registry Canister using VetKeys on ICP. The `Registry Canister` grants access to the keys, only to the `Proxy Agent` by verifying the Nitro TEE Attestations, and matching the running image hash to the last release. This ensures the sensitive data is not exposed in any way.
 
 ## Deployed Canisters
 - Frontend Canister: [bv6mc-zqaaa-aaaam-aenqa-cai](https://dashboard.internetcomputer.org/canister/bv6mc-zqaaa-aaaam-aenqa-cai)
