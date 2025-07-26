@@ -80,8 +80,14 @@ npm run deploy
 npm run start:proxy
 ```
 
+## About Neural
+
+Neural is a larger project that aims to reimagine Decentralized Governance for everyone. In chains outside ICP ecosystem like Ethereum, Solana, Aptos, because of the high gas costs and slow transactions, the DAO ecosystem is mostly on centralized voting and governance apps. This creates a paradox where DAOs that came with the promise of decentralization are themselves centralized.
+
+The vision of Neural is to use ICP to provide a chain-agnostic DAO Governance Layer, that is not gas-heavy yet on-chain and auditable, and close to where the people actually are - Discord, Telegram and Discourse Forums. Thus, making ICP as the de-facto solution for DAO Tooling.
+
 ## Roadmap
-### Neuron Bot - Governance where people talk
+### Neuron Bot - Governance where the people are
 A Discord Bot that allows governance for ICP SNS DAOs from within the Discord app. The architecture could be extended to other centralized communication platforms like Telegram, Discourse Forums, etc and bring the governance layer closer to where people talk.
 
 ### Neural Hub
