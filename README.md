@@ -1,6 +1,6 @@
 # Neuron Bot
 
-_This project is a part of series of projects, **Neural** for WCHL 2025, meant to make the ICP DAO capabilities accessible to organizations outside ICP. The goal is to establish ICP as the ultimate DAO platform for any needs._
+_This project is a part of series of projects, **Neural** for WCHL 2025, meant to make the ICP DAO capabilities accessible to organizations outside ICP. The goal is to establish ICP as the de-facto DAO platform for any needs._
 
 Voting on SNS proposals, Stake-aware Access Controls, Enhanced Community Collaboration, all through Discord now!
 
@@ -77,3 +77,10 @@ npm run setup
 npm run deploy
 npm run start:proxy
 ```
+
+## Roadmap
+### Neuron Bot - Governance where people talk
+A Discord Bot that allows governance for ICP SNS DAOs from within the Discord app. The architecture could be extended to other centralized communication platforms like Telegram, Discourse Forums, etc and bring the governance layer closer to where people talk.
+
+### Neural Hub
+The cross-chain governance layer for DAOs that works across Ethereum, Solana, ICP and Aptos. Completely on-chain and auditable voting and proposals with native chain support.
